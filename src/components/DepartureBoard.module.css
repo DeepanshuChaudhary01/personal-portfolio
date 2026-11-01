@@ -213,9 +213,17 @@
     padding: 14px 14px 12px;
   }
 
-  .titleEn,
-  .city {
-    display: none;
+  /* Narrow boards stack each bilingual label (Japanese over English, city over time) rather than
+     dropping the English. */
+  .title {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .clock {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
   }
 
   .title :global(.jp),

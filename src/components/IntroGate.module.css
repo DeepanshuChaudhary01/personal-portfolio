@@ -533,7 +533,7 @@
     padding: 10px 10px 8px;
   }
 
-  .boardEn,
+  /* The status ("接近 Approaching") doesn't fit beside the name; the board title stays bilingual. */
   .status {
     display: none;
   }
