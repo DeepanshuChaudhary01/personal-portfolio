@@ -1,0 +1,189 @@
+.train {
+  --car-w: calc(var(--car-h) * 820 / 300);
+  position: absolute;
+  left: 0;
+  bottom: var(--rail-y);
+  display: flex;
+  align-items: flex-end;
+  height: var(--car-h);
+  transform: translateX(120vw);
+  will-change: transform;
+}
+
+.defs {
+  position: absolute;
+}
+
+.car {
+  flex: none;
+  width: var(--car-w);
+  height: 100%;
+  overflow: visible;
+}
+
+.gangway {
+  flex: none;
+  width: calc(var(--car-h) * 0.03);
+  height: 62%;
+  margin-bottom: calc(var(--car-h) * 0.12);
+  border-radius: 2px;
+  background: #1a1d21;
+}
+
+.body {
+  fill: url(#dc-steel);
+}
+
+.roofUnit {
+  fill: #7d848b;
+}
+
+.window {
+  fill: url(#dc-interior);
+  stroke: #2c3137;
+  stroke-width: 3;
+}
+
+.ceiling {
+  fill: rgba(255, 255, 255, 0.75);
+}
+
+.seats {
+  fill: rgba(122, 78, 48, 0.35);
+}
+
+.band {
+  fill: var(--line-ai);
+}
+
+.bandThin {
+  fill: var(--line-ai);
+  opacity: 0.6;
+}
+
+.doorway {
+  fill: url(#dc-doorway);
+}
+
+.doorPanel {
+  fill: url(#dc-steel);
+  stroke: #8a9198;
+  stroke-width: 1;
+}
+
+.doorLeft,
+.doorRight {
+  transition: transform 0.75s cubic-bezier(0.55, 0, 0.25, 1);
+}
+
+.train[data-doors="open"] .doorLeft {
+  transform: translateX(-50px);
+}
+
+.train[data-doors="open"] .doorRight {
+  transform: translateX(50px);
+}
+
+.doorFrame {
+  fill: none;
+  stroke: #6b7279;
+  stroke-width: 2;
+}
+
+/* Door lamps light up while the doors are open, as on Japanese trains. */
+.doorLamp {
+  fill: #3b3026;
+  transition: fill 0.2s ease;
+}
+
+.train[data-doors="open"] .doorLamp {
+  fill: #ff9a2e;
+  filter: drop-shadow(0 0 4px #ff9a2e);
+}
+
+.ledPanel {
+  fill: #0b0c0e;
+}
+
+.ledText {
+  fill: var(--led-amber);
+  font-family: var(--font-dot);
+  font-size: 12px;
+  text-anchor: middle;
+}
+
+.skirt {
+  fill: #24282d;
+}
+
+.wheel {
+  fill: #121417;
+  stroke: #3b4046;
+  stroke-width: 3;
+}
+
+.cabWindow {
+  fill: url(#dc-glass);
+  stroke: #2c3137;
+  stroke-width: 3;
+}
+
+.headlight {
+  fill: #fffbe6;
+}
+
+/* Headlight glare, centred on the lamp at the front of the lead car. */
+.flare {
+  position: absolute;
+  left: calc(var(--car-h) * (0.047 - 0.6));
+  bottom: calc(var(--car-h) * (0.287 - 0.6));
+  width: calc(var(--car-h) * 1.2);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 252, 235, 0.95) 0,
+    rgba(255, 240, 200, 0.35) 10%,
+    rgba(255, 230, 180, 0.08) 35%,
+    transparent 62%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* The beam the headlight throws along the track ahead. */
+.beam {
+  position: absolute;
+  right: 100%;
+  bottom: calc(var(--car-h) * 0.12);
+  width: 70vw;
+  height: calc(var(--car-h) * 0.34);
+  background: linear-gradient(to left, rgba(255, 246, 220, 0.38), transparent 80%);
+  clip-path: polygon(100% 42%, 0 0, 0 100%, 100% 58%);
+  filter: blur(6px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: beam-dim 4.6s ease both;
+}
+
+@keyframes beam-dim {
+  0%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+/* Speed lines, faded out by the arrival animation as the train brakes. */
+.streaks {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 9px, rgba(255, 255, 255, 0.22) 9px 10px),
+    linear-gradient(90deg, transparent, rgba(8, 12, 18, 0.35));
+  mix-blend-mode: screen;
+}

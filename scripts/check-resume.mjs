@@ -21,8 +21,10 @@ Promise.withResolvers ??= function () {
 };
 
 // pdf.js logs browser-only warnings ("Cannot polyfill DOMMatrix" etc.) that don't affect reading text.
-const log = console.log;
-console.log = (...args) => (String(args[0]).startsWith("Warning:") ? undefined : log(...args));
+for (const method of ["log", "warn"]) {
+  const original = console[method];
+  console[method] = (...args) => (String(args[0]).startsWith("Warning:") ? undefined : original(...args));
+}
 
 const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
 

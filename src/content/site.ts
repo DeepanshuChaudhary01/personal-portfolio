@@ -21,8 +21,8 @@ export type NavStation = {
 export const navStations: NavStation[] = [
   { code: "01", id: "here", ja: "現在地", en: "You are here", open: true },
   { code: "02", id: "route-map", ja: "路線図", en: "Route map", open: true },
-  { code: "03", id: "work", ja: "実績", en: "Work", open: false },
-  { code: "04", id: "journey", ja: "経歴", en: "Journey", open: false },
+  { code: "03", id: "work", ja: "実績", en: "Work", open: true },
+  { code: "04", id: "journey", ja: "経歴", en: "Journey", open: true },
   { code: "05", id: "departures", ja: "発車案内", en: "Departures", open: false },
   { code: "06", id: "resume", ja: "履歴書", en: "Resume", open: true },
   { code: "07", id: "contact", ja: "連絡先", en: "Contact", open: false },
@@ -36,6 +36,23 @@ export const hero = {
     "I put LLMs into production systems, along with the queues, checks and monitoring that keep them honest.",
   lede:
     "Software engineer at a large HR-tech company in Tokyo. I work mostly in Ruby on Rails, with Go, Python and JavaScript where they fit, on systems that review, rank and search job data. Trained as a mechanical engineer at IIT Patna, then changed lines to software.",
+};
+
+// The intro screen: a night platform where the visitor's train arrives.
+export const intro = {
+  tagline: "Software engineer in Tokyo · LLM systems & backend",
+  status: {
+    arriving: "接近 Approaching",
+    stopped: "到着 Arrived",
+    boarding: "乗車 Boarding",
+  },
+  announcements: {
+    arriving:
+      "まもなく 1番線に 電車がまいります。黄色い点字ブロックの内側まで お下がりください。   The train for Deepanshu Chaudhary is now arriving at Platform 1. Please stand behind the yellow line.",
+    stopped:
+      "この電車は チャウダリ ディーパンシュ 行きです。   This train is bound for Deepanshu Chaudhary: software engineer, LLM systems and backend, Tokyo.",
+    boarding: "ドアが開きます。ご注意ください。   Doors opening. Please mind the gap.",
+  },
 };
 
 // Shown next to the resume ticket. Keep it in step with the PDF in /resume.

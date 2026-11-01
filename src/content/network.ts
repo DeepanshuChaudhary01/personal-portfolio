@@ -25,6 +25,8 @@ export type Station = {
   span?: [number, number];
   label: "above" | "below";
   summary: string;
+  // Slug of the case study under /work, for projects that have one.
+  caseStudy?: string;
 };
 
 export const LINES: Line[] = [
@@ -181,6 +183,7 @@ export const STATIONS: Station[] = [
     x: 530, y: 338, lines: ["B", "D", "C"], codes: ["B03", "D03", "C03"], kind: "interchange", span: [314, 362], label: "below",
     summary:
       "Backend services for a large job-search platform: complex search and ranking logic, batch clustering and de-duplication, and Python/Go pipelines on OpenSearch.",
+    caseStudy: "job-search-platform",
   },
   {
     id: "review",
@@ -189,6 +192,7 @@ export const STATIONS: Station[] = [
     x: 680, y: 330, lines: ["A", "B", "D", "C"], codes: ["A03", "B04", "D04", "C04"], kind: "interchange", span: [298, 362], label: "below",
     summary:
       "Automated pre-publication quality checks for job postings, replacing a fully manual review. An asynchronous batch pipeline runs LLM validation and stores structured findings; reviewers work through them in a Rails UI. I owned it end to end, from design to deployment and monitoring.",
+    caseStudy: "llm-content-review",
   },
   {
     id: "matching",
@@ -197,6 +201,7 @@ export const STATIONS: Station[] = [
     x: 810, y: 330, lines: ["A", "B", "D", "C"], codes: ["A04", "B05", "D05", "C05"], kind: "interchange", span: [298, 362], label: "above",
     summary:
       "Ranks candidates against each job's requirements and drafts tailored outreach, which a person approves before anything is sent. Rails API over BigQuery, Next.js frontend, deployed on AWS.",
+    caseStudy: "llm-candidate-matching",
   },
 ];
 

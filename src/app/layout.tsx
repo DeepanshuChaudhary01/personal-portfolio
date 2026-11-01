@@ -1,11 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import {
-  Atkinson_Hyperlegible_Mono,
-  Atkinson_Hyperlegible_Next,
-  DotGothic16,
-  Noto_Sans_JP,
-} from "next/font/google";
+import { Atkinson_Hyperlegible_Mono, Atkinson_Hyperlegible_Next } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const sans = Atkinson_Hyperlegible_Next({
@@ -20,9 +16,20 @@ const mono = Atkinson_Hyperlegible_Mono({
   display: "swap",
   adjustFontFallback: false,
 });
-// Japanese fonts are served in unicode-range slices, so only the glyphs we use get downloaded.
-const jp = Noto_Sans_JP({ variable: "--font-jp", display: "swap", preload: false });
-const dot = DotGothic16({ weight: "400", variable: "--font-dot", display: "swap", preload: false });
+// The Japanese fonts are subsets holding only the characters this site uses (~90 KB together,
+// instead of dozens of slices). scripts/subset-fonts.mjs rebuilds them when the copy changes.
+const jp = localFont({
+  src: "../fonts/noto-sans-jp.woff2",
+  weight: "400 900",
+  variable: "--font-jp",
+  display: "swap",
+});
+const dot = localFont({
+  src: "../fonts/dotgothic16.woff2",
+  weight: "400",
+  variable: "--font-dot",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Deepanshu Chaudhary · Software Engineer, LLM systems",
@@ -40,6 +47,10 @@ export const viewport: Viewport = {
 // Runs before first paint so the saved theme never flashes.
 const themeScript = `(()=>{try{let t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="light"}})()`;
 
+// Also before first paint: show the intro (IntroGate) on the home page once per session, but not for
+// deep links (/#resume) or reduced motion. Adding ?intro to the URL always shows it, for previewing.
+const introScript = `(()=>{try{const f=new URLSearchParams(location.search).has("intro");if(location.pathname==="/"&&(f||(!location.hash&&!sessionStorage.getItem("dc-intro-seen")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)))document.documentElement.dataset.intro="show"}catch(e){}})()`;
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
@@ -49,6 +60,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
       </head>
       <body>{children}</body>
     </html>

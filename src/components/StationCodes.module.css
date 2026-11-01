@@ -1,0 +1,33 @@
+.codes {
+  --s: 36px;
+  --bw: 3.5px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.codes[data-size="md"] {
+  --s: 50px;
+  --bw: 4.5px;
+}
+
+.code {
+  display: inline-grid;
+  place-content: center;
+  width: var(--s);
+  height: var(--s);
+  border: var(--bw) solid var(--c);
+  border-radius: calc(var(--s) * 0.2);
+  background: var(--sign-bg);
+  color: var(--sign-ink);
+  text-align: center;
+  font-family: var(--font-jp), sans-serif;
+  font-size: calc(var(--s) * 0.36);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.line {
+  font-size: 0.62em;
+  letter-spacing: 0.04em;
+}

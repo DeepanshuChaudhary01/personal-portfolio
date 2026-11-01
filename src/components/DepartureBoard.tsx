@@ -1,51 +1,16 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import { board } from "@/content/site";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
+import { useTokyoClock } from "@/lib/useTokyoClock";
+import { Led } from "./Led";
 import styles from "./DepartureBoard.module.css";
-
-type Clock = { h: string; m: string; s: string };
-
-function tokyoNow(): Clock {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Asia/Tokyo",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hourCycle: "h23",
-  }).formatToParts(new Date());
-  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "00";
-  return { h: get("hour"), m: get("minute"), s: get("second") };
-}
-
-// Each character lights up a beat after the previous one, like an LED board refreshing.
-function Led({ text, tone = "amber" }: { text: string; tone?: "amber" | "green" }) {
-  return (
-    <span className={styles.led} data-tone={tone}>
-      <span className="sr-only">{text}</span>
-      <span aria-hidden="true">
-        {Array.from(text).map((ch, i) => (
-          <span key={i} style={{ "--i": i } as CSSProperties}>
-            {ch}
-          </span>
-        ))}
-      </span>
-    </span>
-  );
-}
 
 export function DepartureBoard() {
   const reducedMotion = usePrefersReducedMotion();
-  const [clock, setClock] = useState<Clock | null>(null);
+  const clock = useTokyoClock();
   const [nowIndex, setNowIndex] = useState(0);
-
-  useEffect(() => {
-    const tick = () => setClock(tokyoNow());
-    tick();
-    const id = window.setInterval(tick, 1000);
-    return () => window.clearInterval(id);
-  }, []);
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -93,18 +58,18 @@ export function DepartureBoard() {
       <div className={styles.screen}>
         <div className={styles.row}>
           <span className={styles.service}>
-            <Led text="先発" tone="green" />
+            <Led text="先発" tone="green" className={styles.ledText} />
             <small>Now</small>
           </span>
-          <Led key={nowIndex} text={board.now[nowIndex]} />
+          <Led key={nowIndex} text={board.now[nowIndex]} className={styles.ledText} />
           <span className={styles.track}>1</span>
         </div>
         <div className={styles.row}>
           <span className={styles.service}>
-            <Led text="次発" />
+            <Led text="次発" className={styles.ledText} />
             <small>Next</small>
           </span>
-          <Led text={board.next} />
+          <Led text={board.next} className={styles.ledText} />
           <span className={styles.track}>2</span>
         </div>
         <div className={styles.marquee}>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { LINES, LINE_BY_ID, STATIONS, roundedPath, type LineId, type Station } from "@/content/network";
 import styles from "./RouteMap.module.css";
@@ -102,8 +103,10 @@ function StationInfo({ station }: { station: Station }) {
           {station.meta && <span className={styles.infoMeta}>{station.meta}</span>}
         </h3>
         <p className={styles.infoText}>{station.summary}</p>
-        {isInterchange && station.lines.length > 1 && (
-          <p className={styles.infoSoon}>Full case study opens with DC03 · Work</p>
+        {station.caseStudy && (
+          <Link href={`/work/${station.caseStudy}`} className={styles.infoLink}>
+            Read the case study <span aria-hidden="true">→</span>
+          </Link>
         )}
       </div>
       <ul className={styles.infoLines}>

@@ -23,6 +23,7 @@
   --line-backend: #00957a;
   --line-data: #1b86c9;
   --line-cloud: #c48f14;
+  --line-mech: #7c8794;
   --accent: var(--line-ai);
 
   --tactile: #f2c200;
@@ -53,6 +54,7 @@
   --line-backend: #14b892;
   --line-data: #3aa3eb;
   --line-cloud: #e0aa2e;
+  --line-mech: #8d98a5;
 
   --tactile: #c9a000;
   --tactile-dot: #a58300;
@@ -69,6 +71,11 @@ html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
   scroll-padding-top: 88px;
+}
+
+/* No scrolling behind the intro screen. */
+html[data-intro="show"] {
+  overflow: hidden;
 }
 
 body {

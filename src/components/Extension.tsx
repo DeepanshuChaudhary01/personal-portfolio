@@ -12,7 +12,7 @@ export function Extension() {
   ];
 
   return (
-    <section id="extension" data-station="03" className="section" aria-labelledby="extension-title">
+    <section id="extension" data-station={upcoming[0]?.code} className="section" aria-labelledby="extension-title">
       <div className="container">
         <header className={styles.head}>
           <p className={`${styles.ja} jp`} lang="ja">
@@ -22,8 +22,7 @@ export function Extension() {
             Line extension under construction
           </h2>
           <p className={styles.desc}>
-            The rest of the line opens soon: case studies, the career journey, a live board of tech articles and
-            contact.
+            The rest of the line opens soon: a live board of tech articles, and contact.
           </p>
         </header>
 

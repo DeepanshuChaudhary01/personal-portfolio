@@ -1,0 +1,111 @@
+.strip {
+  --marker-w: 14px;
+  --marker-h: calc(var(--band) + 10px);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  text-align: center;
+}
+
+/* Each stop draws the stretch of line to the next one. */
+.stop:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--marker-h) / 2 - var(--band) / 2);
+  left: 50%;
+  width: 100%;
+  height: var(--band);
+  background: var(--band-h);
+}
+
+.marker {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: var(--marker-w);
+  height: var(--marker-h);
+  border: 2.5px solid var(--ink);
+  border-radius: 8px;
+  background: var(--surface);
+  transition: background-color 0.2s ease;
+  transition-delay: calc(var(--i) * 70ms);
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-inline: 4px;
+}
+
+.name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.note {
+  font-size: 0.76rem;
+  line-height: 1.35;
+  color: var(--ink-3);
+}
+
+.strip[data-size="mini"] {
+  --marker-w: 11px;
+}
+
+.strip[data-size="mini"] .marker {
+  border-width: 2px;
+}
+
+/* On narrow screens the full route runs top to bottom, with labels beside the stops. */
+@media (max-width: 860px) {
+  .strip[data-size="full"] {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    gap: 18px;
+  }
+
+  .strip[data-size="full"] .stop {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+    text-align: left;
+  }
+
+  .strip[data-size="full"] .marker {
+    width: var(--marker-h);
+    height: var(--marker-w);
+    margin-top: 3px;
+  }
+
+  .strip[data-size="full"] .stop:not(:last-child)::before {
+    top: calc(3px + var(--marker-w) / 2);
+    left: calc(var(--marker-h) / 2 - var(--band) / 2);
+    width: var(--band);
+    height: calc(100% + 18px);
+    background: var(--band-v);
+  }
+
+  .strip[data-size="full"] .label {
+    padding-inline: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marker {
+    transition: none;
+  }
+}

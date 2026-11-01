@@ -349,12 +349,22 @@
   color: var(--ink-2);
 }
 
-.infoSoon {
-  margin: 0.7em 0 0;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.04em;
-  color: var(--ink-3);
+.infoLink {
+  display: inline-flex;
+  gap: 0.4em;
+  margin-top: 0.8em;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.infoLink span {
+  transition: transform 0.25s ease;
+}
+
+.infoLink:hover span {
+  transform: translateX(4px);
 }
 
 .infoLines {

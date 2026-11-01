@@ -1,0 +1,326 @@
+.track {
+  --when-w: 112px;
+  --rail-w: 72px;
+  /* Marker centre, measured from the top of each stop. */
+  --mc: 18px;
+  position: relative;
+  max-width: 980px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stop {
+  --c: var(--accent);
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--when-w) var(--rail-w) minmax(0, 1fr);
+  grid-template-areas: "when rail body";
+  padding-bottom: clamp(36px, 5vw, 56px);
+}
+
+.stop:last-child {
+  padding-bottom: 0;
+}
+
+.stop[data-kind="origin"] {
+  --c: var(--line-mech);
+}
+
+/* The track from this stop to the next. It starts grey (the mechanical line) and turns
+   vermilion at the transfer; the stretch to the next stop is dashed, still under construction. */
+.stop[data-line]::before {
+  content: "";
+  position: absolute;
+  top: var(--mc);
+  left: calc(var(--when-w) + var(--rail-w) / 2 - 3px);
+  width: 6px;
+  height: 100%;
+  background: var(--accent);
+}
+
+.stop[data-line="mech"]::before {
+  background: var(--line-mech);
+}
+
+.stop[data-line="future"]::before {
+  background: repeating-linear-gradient(to bottom, var(--accent) 0 9px, transparent 9px 16px);
+  opacity: 0.55;
+}
+
+/* ---- Date column ---- */
+
+.when {
+  grid-area: when;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 6px 20px 0 0;
+  line-height: 1;
+  text-align: right;
+}
+
+.year {
+  font-family: var(--font-jp), sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.month {
+  margin-top: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ---- Markers ---- */
+
+.rail {
+  grid-area: rail;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.marker {
+  position: relative;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  margin-top: calc(var(--mc) - 11px);
+  border: 4px solid var(--c);
+  border-radius: 50%;
+  background: var(--paper);
+  transition: background 0.35s ease, box-shadow 0.35s ease;
+}
+
+.stop[data-reached] .marker {
+  background: var(--c);
+}
+
+.stop[data-kind="minor"] .marker {
+  width: 14px;
+  height: 14px;
+  margin-top: calc(var(--mc) - 7px);
+  border-width: 3px;
+}
+
+/* The transfer is an interchange: once passed, it shows both lines it joins. */
+.stop[data-kind="transfer"] .marker {
+  width: 24px;
+  height: 40px;
+  margin-top: calc(var(--mc) - 20px);
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.stop[data-kind="transfer"][data-reached] .marker {
+  background: linear-gradient(var(--line-mech) 50%, var(--accent) 50%);
+}
+
+.stop[data-kind="present"][data-reached] .marker {
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.stop[data-kind="next"] .marker {
+  border-style: dashed;
+}
+
+/* ---- Stop content ---- */
+
+.body {
+  grid-area: body;
+  min-width: 0;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+  margin-bottom: 8px;
+  padding: 3px 9px;
+  border-radius: 3px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.tag :global(.jp) {
+  color: var(--accent);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.stop[data-kind="next"] .title {
+  color: var(--accent);
+}
+
+.meta {
+  margin: 5px 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.text {
+  max-width: 60ch;
+  margin: 12px 0 0;
+  color: var(--ink-2);
+}
+
+.points {
+  max-width: 60ch;
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--ink-2);
+}
+
+.points li + li {
+  margin-top: 4px;
+}
+
+.points li::marker {
+  color: var(--accent);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: border-color 0.2s ease;
+}
+
+.links a:hover {
+  border-color: var(--ink-3);
+}
+
+/* ---- The train ---- */
+
+.train {
+  position: absolute;
+  top: 0;
+  left: calc(var(--when-w) + var(--rail-w) / 2);
+  z-index: 2;
+  width: 22px;
+  height: 56px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, calc(var(--train-y, var(--mc)) - 50%));
+  transition: opacity 0.4s ease;
+  will-change: transform;
+}
+
+.track[data-ready] .train {
+  opacity: 1;
+}
+
+.trainCar {
+  display: block;
+  width: 22px;
+  height: 56px;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+}
+
+.trainBody {
+  fill: var(--sign-bg);
+  stroke: var(--sign-ink);
+  stroke-width: 1.5;
+}
+
+.trainStripe {
+  fill: var(--accent);
+}
+
+.trainRoof {
+  fill: #c9ced3;
+}
+
+.trainGlass {
+  fill: #2a3747;
+}
+
+/* Headlight on the track ahead. */
+.beam {
+  position: absolute;
+  top: 52px;
+  left: 50%;
+  width: 40px;
+  height: 70px;
+  background: linear-gradient(to bottom, rgba(255, 214, 140, 0.45), transparent);
+  clip-path: polygon(35% 0, 65% 0, 100% 100%, 0 100%);
+  filter: blur(3px);
+  transform: translateX(-50%);
+}
+
+@media (max-width: 720px) {
+  .track {
+    --when-w: 0px;
+    --rail-w: 44px;
+  }
+
+  .stop {
+    grid-template-columns: var(--rail-w) minmax(0, 1fr);
+    grid-template-areas:
+      "rail when"
+      "rail body";
+  }
+
+  .when {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+    padding: 8px 0 8px;
+    text-align: left;
+  }
+
+  .year {
+    font-size: 1.1rem;
+  }
+
+  .month {
+    margin-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .train {
+    display: none;
+  }
+
+  .marker {
+    transition: none;
+  }
+}

@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/subset-fonts.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/check-resume.mjs",
+    "prebuild": "node scripts/subset-fonts.mjs && node scripts/check-resume.mjs",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
+    "fonts": "node scripts/subset-fonts.mjs",
     "check:resume": "node scripts/check-resume.mjs"
   },
   "dependencies": {

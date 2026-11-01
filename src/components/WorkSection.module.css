@@ -1,0 +1,166 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  padding: 26px 24px 22px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* The project's line colours, side by side, like the coloured band on a station sign. */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--stripe);
+}
+
+.card:hover {
+  border-color: var(--ink-3);
+  transform: translateY(-3px);
+  box-shadow: 0 24px 40px -32px rgba(0, 0, 0, 0.5);
+}
+
+/* Hovering a card runs a "train" down its route: the stops light up one after another. */
+.card:hover [data-marker],
+.card:focus-visible [data-marker] {
+  background: var(--ink);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.routeNo {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin: 0;
+  font-size: clamp(1.45rem, 1.1rem + 1vw, 1.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.kind {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+.summary {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+.route {
+  margin-top: auto;
+  padding: 16px 14px 12px;
+  border-radius: 6px;
+  background: var(--paper);
+}
+
+.caption {
+  margin: 10px 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.stack {
+  font-size: 0.82rem;
+  color: var(--ink-3);
+}
+
+.more {
+  font-size: 0.92rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.more span {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.card:hover .more span {
+  transform: translateX(4px);
+}
+
+.onboard {
+  position: absolute;
+  top: 26px;
+  right: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.onboard .jp {
+  color: var(--accent);
+}
+
+/* The "you're on it" tag takes the route number's place. */
+.card:has(.onboard) .routeNo {
+  visibility: hidden;
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover {
+    transform: none;
+  }
+}
