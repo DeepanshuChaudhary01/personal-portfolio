@@ -384,9 +384,6 @@
 
 .corner,
 .skip {
-  position: absolute;
-  top: clamp(10px, 1.6vh, 16px);
-  z-index: 2;
   margin: 0;
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -396,11 +393,24 @@
 }
 
 .corner {
+  position: absolute;
+  top: clamp(14px, 2vh, 20px);
   left: var(--gutter);
+  z-index: 2;
+}
+
+/* Language switch and skip, top right. */
+.topRight {
+  position: absolute;
+  top: clamp(8px, 1.2vh, 12px);
+  right: var(--gutter);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .skip {
-  right: var(--gutter);
   padding: 4px 0;
   border: 0;
   background: none;
@@ -447,6 +457,34 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #a3a9b0;
+  transition: opacity 0.6s ease;
+}
+
+/* "Inspired by Tokyo's Yamanote Line": appears once the train has pulled in. The ring is the loop. */
+.inspired {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  margin: 0;
+  font-size: 0.8rem;
+  color: #b8bec5;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+}
+
+.inspired::before {
+  content: "";
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border: 3px solid #8fc31f;
+  border-radius: 50%;
+}
+
+.gate:is([data-phase="stopped"], [data-phase="boarding"], [data-phase="leaving"]) .inspired {
+  opacity: 1;
+  transform: none;
 }
 
 .boardButton {
@@ -511,5 +549,27 @@
 
   .corner {
     display: none;
+  }
+}
+
+/* On phones there's no room for both lines above the platform edge: when the train stops,
+   the Yamanote line takes the tagline's place. */
+@media (max-width: 640px) {
+  .cta {
+    display: grid;
+    justify-items: center;
+  }
+
+  .tagline,
+  .inspired {
+    grid-area: 1 / 1;
+  }
+
+  .boardButton {
+    grid-area: 2 / 1;
+  }
+
+  .gate:is([data-phase="stopped"], [data-phase="boarding"], [data-phase="leaving"]) .tagline {
+    opacity: 0;
   }
 }

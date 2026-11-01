@@ -1,8 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
-import { LINES, LINE_BY_ID, STATIONS, roundedPath, type LineId, type Station } from "@/content/network";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { localize, type Lang } from "@/i18n/config";
+import { ui } from "@/i18n/ui";
+import {
+  LINES,
+  LINE_BY_ID,
+  getStations,
+  lineName,
+  roundedPath,
+  type LineId,
+  type Station,
+} from "@/content/network";
 import styles from "./RouteMap.module.css";
 
 const PATHS = LINES.map((line) => ({ ...line, d: roundedPath(line.points) }));
@@ -13,19 +23,20 @@ type DrawState = "static" | "armed" | "drawn";
 
 type MarkProps = {
   station: Station;
+  lang: Lang;
   active: boolean;
   pinned: boolean;
   onHover: (id: string | null) => void;
   onSelect: (id: string) => void;
 };
 
-function StationMark({ station, active, pinned, onHover, onSelect }: MarkProps) {
+function StationMark({ station, lang, active, pinned, onHover, onSelect }: MarkProps) {
   const isInterchange = station.kind === "interchange";
   const [top, bottom] = station.span ?? [station.y, station.y];
   const above = station.label === "above";
   const nameY = isInterchange ? (above ? top - 30 : bottom + 26) : above ? station.y - 16 : station.y + 27;
   const metaY = above ? top - 14 : bottom + 42;
-  const lineNames = station.lines.map((id) => LINE_BY_ID[id].name).join(", ");
+  const lineNames = station.lines.map((id) => lineName(LINE_BY_ID[id], lang)).join(lang === "ja" ? "・" : ", ");
 
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -49,7 +60,7 @@ function StationMark({ station, active, pinned, onHover, onSelect }: MarkProps) 
       tabIndex={0}
       role="button"
       aria-pressed={pinned}
-      aria-label={`${station.name}: ${isInterchange ? "project" : "skill"} on the ${lineNames}`}
+      aria-label={ui[lang].map.ariaStation(station.name, isInterchange, lineNames)}
       onMouseEnter={() => onHover(station.id)}
       onMouseLeave={() => onHover(null)}
       onFocus={() => onHover(station.id)}
@@ -80,7 +91,8 @@ function StationMark({ station, active, pinned, onHover, onSelect }: MarkProps) 
   );
 }
 
-function StationInfo({ station }: { station: Station }) {
+function StationInfo({ station, lang }: { station: Station; lang: Lang }) {
+  const t = ui[lang].map;
   const isInterchange = station.kind === "interchange";
   return (
     <>
@@ -97,22 +109,22 @@ function StationInfo({ station }: { station: Station }) {
         ))}
       </div>
       <div className={styles.infoBody}>
-        <p className={styles.infoKind}>{isInterchange ? "Interchange · project" : "Station · skill"}</p>
+        <p className={styles.infoKind}>{isInterchange ? t.interchange : t.station}</p>
         <h3 className={styles.infoName}>
           {station.name}
           {station.meta && <span className={styles.infoMeta}>{station.meta}</span>}
         </h3>
         <p className={styles.infoText}>{station.summary}</p>
         {station.caseStudy && (
-          <Link href={`/work/${station.caseStudy}`} className={styles.infoLink}>
-            Read the case study <span aria-hidden="true">→</span>
+          <Link href={localize(lang, `/work/${station.caseStudy}`)} className={styles.infoLink}>
+            {t.readCase} <span aria-hidden="true">→</span>
           </Link>
         )}
       </div>
       <ul className={styles.infoLines}>
         {station.lines.map((id) => (
           <li key={id} style={{ "--c": LINE_BY_ID[id].color } as CSSProperties}>
-            {LINE_BY_ID[id].name}
+            {lineName(LINE_BY_ID[id], lang)}
           </li>
         ))}
       </ul>
@@ -120,7 +132,8 @@ function StationInfo({ station }: { station: Station }) {
   );
 }
 
-function MapKey() {
+function MapKey({ lang }: { lang: Lang }) {
+  const t = ui[lang].map;
   return (
     <>
       <svg className={styles.keySymbols} viewBox="0 0 96 48" width="96" height="48" aria-hidden="true">
@@ -129,18 +142,17 @@ function MapKey() {
         <rect className={styles.keyCapsule} x="60" y="8" width="20" height="32" rx="10" />
       </svg>
       <div className={styles.infoBody}>
-        <p className={styles.infoKind}>How to read this map</p>
-        <h3 className={styles.infoName}>Lines are skills. Interchanges are projects.</h3>
-        <p className={styles.infoText}>
-          Each line is an area I work in. Small stations are tools and techniques; the large white interchanges
-          are projects where several lines meet. Hover or tap any of them for details.
-        </p>
+        <p className={styles.infoKind}>{t.keyKind}</p>
+        <h3 className={styles.infoName}>{t.keyTitle}</h3>
+        <p className={styles.infoText}>{t.keyText}</p>
       </div>
     </>
   );
 }
 
-export function RouteMap() {
+export function RouteMap({ lang }: { lang: Lang }) {
+  const t = ui[lang].map;
+  const stations = useMemo(() => getStations(lang), [lang]);
   const frameRef = useRef<HTMLDivElement>(null);
   const [draw, setDraw] = useState<DrawState>("static");
   const [hoverLine, setHoverLine] = useState<LineId | null>(null);
@@ -169,14 +181,14 @@ export function RouteMap() {
 
   const activeLine = hoverLine ?? pinnedLine;
   const stationId = hoverStation ?? pinnedStation;
-  const station = STATIONS.find((s) => s.id === stationId) ?? null;
+  const station = stations.find((s) => s.id === stationId) ?? null;
   const togglePinnedLine = (id: LineId) => setPinnedLine((p) => (p === id ? null : id));
   const selectStation = (id: string) => setPinnedStation((p) => (p === id ? null : id));
 
   return (
     <div className={styles.frame} ref={frameRef}>
       <div className={styles.toolbar}>
-        <div className={styles.legend} role="group" aria-label="Highlight a line">
+        <div className={styles.legend} role="group" aria-label={t.filter}>
           {LINES.map((line) => (
             <button
               key={line.id}
@@ -191,16 +203,16 @@ export function RouteMap() {
               <span className={styles.chipBadge} aria-hidden="true">
                 {line.id}
               </span>
-              {line.name}
-              <span className={`${styles.chipJa} jp`} lang="ja">
-                {line.ja}
+              {lineName(line, lang)}
+              <span className={`${styles.chipJa} ${lang === "ja" ? "" : "jp"}`} lang={lang === "ja" ? "en" : "ja"}>
+                {lang === "ja" ? line.name : line.ja}
               </span>
             </button>
           ))}
         </div>
         <p className={styles.hint}>
-          <span className={styles.hintWide}>Hover a line or station. Click to pin.</span>
-          <span className={styles.hintNarrow}>Swipe the map sideways · tap to pin</span>
+          <span className={styles.hintWide}>{t.hintWide}</span>
+          <span className={styles.hintNarrow}>{t.hintNarrow}</span>
         </p>
       </div>
 
@@ -211,7 +223,7 @@ export function RouteMap() {
           data-draw={draw}
           data-focus={activeLine ?? undefined}
           role="group"
-          aria-label="Route map: skills as lines, projects as interchanges"
+          aria-label={t.ariaMap}
         >
           <g>
             {PATHS.map((line, i) => (
@@ -277,10 +289,11 @@ export function RouteMap() {
           </g>
 
           <g>
-            {STATIONS.map((s) => (
+            {stations.map((s) => (
               <StationMark
                 key={s.id}
                 station={s}
+                lang={lang}
                 active={s.id === stationId}
                 pinned={s.id === pinnedStation}
                 onHover={setHoverStation}
@@ -292,7 +305,7 @@ export function RouteMap() {
       </div>
 
       <div className={styles.info} aria-live="polite">
-        {station ? <StationInfo station={station} /> : <MapKey />}
+        {station ? <StationInfo station={station} lang={lang} /> : <MapKey lang={lang} />}
       </div>
     </div>
   );

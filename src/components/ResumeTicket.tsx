@@ -1,21 +1,25 @@
 import Link from "next/link";
-import { person, resumeHighlights } from "@/content/site";
+import { localize, type Lang } from "@/i18n/config";
+import { ui } from "@/i18n/ui";
+import { getCopy, person } from "@/content/site";
 import { formatIssued, getResume, RESUME_DOWNLOAD_NAME, RESUME_URL } from "@/lib/resumeFile";
+import { EmailMenu } from "./EmailMenu";
 import { SectionSign } from "./SectionSign";
 import styles from "./ResumeTicket.module.css";
 
 // DC06: the resume, issued as a train ticket (乗車券). Details come from the PDF in /resume.
-export async function ResumeTicket() {
+export async function ResumeTicket({ lang }: { lang: Lang }) {
+  const t = ui[lang].ticket;
+  const highlights = getCopy(lang).resumeHighlights;
   const resume = await getResume();
-  const format = resume
-    ? `PDF · ${resume.pages} ${resume.pages === 1 ? "page" : "pages"} · ${resume.paper}`
-    : "Reprinting";
+  const sep = lang === "ja" ? "・" : " · ";
+  const format = resume ? ["PDF", t.pages(resume.pages), resume.paper].join(sep) : t.reprinting;
 
   return (
     <section id="resume" data-station="06" className="section" aria-labelledby="resume-title">
       <div className="container">
-        <SectionSign num="06" ja="履歴書" en="Resume" id="resume-title">
-          One page, kept current. Read it here or take a copy with you.
+        <SectionSign num="06" ja="履歴書" en="Resume" id="resume-title" lang={lang}>
+          {ui[lang].sections.resume}
         </SectionSign>
 
         <div className={styles.layout}>
@@ -26,42 +30,46 @@ export async function ResumeTicket() {
                   <span className={`${styles.kind} jp`} lang="ja">
                     乗車券
                   </span>
-                  <span className={styles.line}>DC Line · Resume</span>
+                  <span className={styles.line}>{t.line}</span>
                   <span className={styles.serial}>No. 0006</span>
                 </div>
 
                 <div className={styles.route}>
                   <div>
-                    <span className={styles.small}>From</span>
-                    <strong>Tokyo</strong>
-                    <span className={`${styles.place} jp`} lang="ja">東京</span>
+                    <span className={styles.small}>{t.from}</span>
+                    <strong>{t.fromPlace}</strong>
+                    <span className={`${styles.place} jp`} lang={lang === "ja" ? "en" : "ja"}>
+                      {lang === "ja" ? "Tokyo" : "東京"}
+                    </span>
                   </div>
                   <span className={styles.arrow} aria-hidden="true">
                     →
                   </span>
                   <div>
-                    <span className={styles.small}>To</span>
-                    <strong>Your team</strong>
-                    <span className={`${styles.place} jp`} lang="ja">貴社</span>
+                    <span className={styles.small}>{t.to}</span>
+                    <strong>{t.toPlace}</strong>
+                    <span className={`${styles.place} jp`} lang={lang === "ja" ? "en" : "ja"}>
+                      {lang === "ja" ? "Your team" : "貴社"}
+                    </span>
                   </div>
                 </div>
 
                 <dl className={styles.details}>
                   <div>
-                    <dt>Passenger</dt>
-                    <dd>{person.nameEn}</dd>
+                    <dt>{t.passenger}</dt>
+                    <dd>{lang === "ja" ? person.nameJa : person.nameEn}</dd>
                   </div>
                   <div>
-                    <dt>Class</dt>
-                    <dd>SDE · AI engineering</dd>
+                    <dt>{t.class}</dt>
+                    <dd>{t.classValue}</dd>
                   </div>
                   <div>
-                    <dt>Format</dt>
+                    <dt>{t.format}</dt>
                     <dd>{format}</dd>
                   </div>
                   <div>
-                    <dt>Issued</dt>
-                    <dd>{resume ? formatIssued(resume.updated) : "Soon"}</dd>
+                    <dt>{t.issued}</dt>
+                    <dd>{resume ? formatIssued(resume.updated, lang) : t.soon}</dd>
                   </div>
                 </dl>
               </div>
@@ -69,19 +77,19 @@ export async function ResumeTicket() {
               <div className={styles.stub}>
                 {resume ? (
                   <>
-                    <Link href="/resume" className={styles.primary}>
-                      View resume <span aria-hidden="true">→</span>
+                    <Link href={localize(lang, "/resume")} className={styles.primary}>
+                      {t.view} <span aria-hidden="true">→</span>
                     </Link>
                     <a href={RESUME_URL} download={RESUME_DOWNLOAD_NAME} className={styles.secondary}>
-                      Download PDF <span aria-hidden="true">↓</span>
+                      {t.download} <span aria-hidden="true">↓</span>
                     </a>
                   </>
                 ) : (
-                  <a href={`mailto:${person.email}`} className={styles.primary}>
-                    Email for a copy <span aria-hidden="true">→</span>
-                  </a>
+                  <EmailMenu email={person.email} lang={lang} className={styles.primary} block>
+                    {t.emailForCopy} <span aria-hidden="true">→</span>
+                  </EmailMenu>
                 )}
-                <span className={`${styles.fine} jp`} lang="ja" title="Not valid if you leave the train early">
+                <span className={`${styles.fine} jp`} lang="ja" title={t.fineTitle}>
                   下車前途無効
                 </span>
               </div>
@@ -89,19 +97,16 @@ export async function ResumeTicket() {
           </div>
 
           <div className={styles.inside}>
-            <p className={styles.insideTitle}>What&apos;s inside</p>
+            <p className={styles.insideTitle}>{t.inside}</p>
             <ul>
-              {resumeHighlights.map((item) => (
+              {highlights.map((item) => (
                 <li key={item.label}>
                   <strong>{item.label}</strong>
                   <span>{item.text}</span>
                 </li>
               ))}
             </ul>
-            <p className={styles.note}>
-              The public copy leaves out employer names and internal figures. Happy to go into detail in
-              conversation.
-            </p>
+            <p className={styles.note}>{t.note}</p>
           </div>
         </div>
       </div>

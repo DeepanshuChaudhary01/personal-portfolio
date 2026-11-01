@@ -270,3 +270,13 @@
     transform: none;
   }
 }
+
+/* Japanese values are set in the system Japanese font (the signage subset doesn't carry them). */
+:global(.lang-ja) .details dd {
+  font-family: inherit;
+}
+
+/* The "Email for a copy" fallback is a button; stretch it like the links it replaces. */
+button.primary {
+  width: 100%;
+}

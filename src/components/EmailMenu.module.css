@@ -1,0 +1,89 @@
+.wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.wrap[data-block] {
+  display: block;
+}
+
+/* Buttons don't inherit type or colour, or show a pointer, by default. :where() keeps this at zero
+   specificity so the caller's class (which styles the trigger) always wins, whatever the CSS order. */
+:where(.trigger) {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  width: max-content;
+  min-width: 240px;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 6px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.45);
+  animation: pop 0.16s ease-out;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.menu a,
+.menu button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 5px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.menu a:hover,
+.menu button:hover,
+.menu a:focus-visible,
+.menu button:focus-visible {
+  background: var(--paper);
+}
+
+.menu button[data-copied] {
+  color: var(--line-backend);
+}
+
+.address {
+  margin: 4px 0 0;
+  padding: 8px 12px 6px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-3);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+    animation: none;
+  }
+}

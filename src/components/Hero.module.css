@@ -237,6 +237,7 @@
 }
 
 .secondary {
+  background: transparent;
   color: var(--ink);
 }
 
@@ -284,4 +285,11 @@
   .here::before {
     animation: none;
   }
+}
+
+/* The katakana name, when it's the big one: twelve full-width characters need a smaller size. */
+.enJa {
+  font-size: clamp(1.9rem, 0.6rem + 4.4vw, 4.4rem);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
 }

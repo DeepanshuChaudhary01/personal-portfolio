@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { PDFDocumentLoadingTask, PDFDocumentProxy, RenderTask } from "pdfjs-dist/legacy/build/pdf.mjs";
+import type { Lang } from "@/i18n/config";
+import { ui } from "@/i18n/ui";
 import styles from "./PdfViewer.module.css";
 
 type PageLink = { href: string; left: number; top: number; width: number; height: number };
@@ -10,13 +12,15 @@ type Status = "loading" | "ready" | "error";
 type Props = {
   src: string;
   downloadName: string;
+  lang: Lang;
   pages: number;
   aspect: number;
 };
 
 // Draws the PDF with pdf.js so it looks the same in every browser, phones included.
 // Links in the PDF stay clickable, and the page text is available to screen readers.
-export function PdfViewer({ src, downloadName, pages, aspect }: Props) {
+export function PdfViewer({ src, downloadName, pages, aspect, lang }: Props) {
+  const t = ui[lang].resume;
   const frameRef = useRef<HTMLDivElement>(null);
   const canvasRefs = useRef<(HTMLCanvasElement | null)[]>([]);
   const [doc, setDoc] = useState<PDFDocumentProxy | null>(null);
@@ -136,16 +140,16 @@ export function PdfViewer({ src, downloadName, pages, aspect }: Props) {
   if (status === "error") {
     return (
       <div className={styles.fallback}>
-        <p className={styles.fallbackTitle}>This browser couldn&apos;t draw the resume here.</p>
+        <p className={styles.fallbackTitle}>{t.viewerFail}</p>
         <p>
           <a href={src} target="_blank" rel="noreferrer">
-            Open the PDF
-          </a>{" "}
-          or{" "}
-          <a href={src} download={downloadName}>
-            download it
+            {t.viewerOpen}
           </a>
-          .
+          {t.viewerOr}
+          <a href={src} download={downloadName}>
+            {t.viewerDownload}
+          </a>
+          {t.viewerEnd}
         </p>
       </div>
     );
@@ -182,7 +186,7 @@ export function PdfViewer({ src, downloadName, pages, aspect }: Props) {
           {status === "loading" && (
             <div className={styles.loading} role="status">
               <span className="jp" lang="ja">まもなく到着</span>
-              <span>Arriving shortly</span>
+              <span>{t.viewerLoading}</span>
             </div>
           )}
         </div>

@@ -1,5 +1,8 @@
-// All visible copy lives here so it can be reviewed in one place.
+// All visible copy lives here so it can be reviewed in one place; Japanese versions are in ja/site.ts.
 // NDA rule: never name the current employer or quote numbers about its systems.
+
+import type { Lang } from "@/i18n/config";
+import { siteJa } from "./ja/site";
 
 export const person = {
   nameEn: "Deepanshu Chaudhary",
@@ -23,24 +26,22 @@ export const navStations: NavStation[] = [
   { code: "02", id: "route-map", ja: "路線図", en: "Route map", open: true },
   { code: "03", id: "work", ja: "実績", en: "Work", open: true },
   { code: "04", id: "journey", ja: "経歴", en: "Journey", open: true },
-  { code: "05", id: "departures", ja: "発車案内", en: "Departures", open: false },
+  { code: "05", id: "departures", ja: "発車案内", en: "Departures", open: true },
   { code: "06", id: "resume", ja: "履歴書", en: "Resume", open: true },
-  { code: "07", id: "contact", ja: "連絡先", en: "Contact", open: false },
+  { code: "07", id: "contact", ja: "連絡先", en: "Contact", open: true },
 ];
 
-export const hero = {
-  role: ["Software Engineer", "LLM systems & backend", "Tokyo"],
-  previous: { name: "IIT Patna", detail: "B.Tech, Mechanical Engineering · 2020–24" },
-  next: { name: "Your team", detail: "SDE · AI engineering · global" },
-  statement:
-    "I put LLMs into production systems, along with the queues, checks and monitoring that keep them honest.",
-  lede:
-    "Software engineer at a large HR-tech company in Tokyo. I work mostly in Ruby on Rails, with Go, Python and JavaScript where they fit, on systems that review, rank and search job data. Trained as a mechanical engineer at IIT Patna, then changed lines to software.",
-};
+// Exit signs for DC07 · Contact. `ja` is the sign's Japanese line, shown in both languages.
+export const exits = [
+  { code: "A1", ja: "メール", label: "Email", href: `mailto:${person.email}` },
+  { code: "A2", ja: "リンクトイン", label: "LinkedIn", href: person.linkedin },
+  { code: "A3", ja: "ギットハブ", label: "GitHub", href: person.github },
+  { code: "A4", ja: "コードフォース", label: "Codeforces", href: person.codeforces },
+  { code: "B1", ja: "履歴書", label: "Resume", href: "/resume" },
+];
 
-// The intro screen: a night platform where the visitor's train arrives.
-export const intro = {
-  tagline: "Software engineer in Tokyo · LLM systems & backend",
+// The intro's arrival status and platform announcements, already bilingual like real boards.
+export const introBoard = {
   status: {
     arriving: "接近 Approaching",
     stopped: "到着 Arrived",
@@ -55,24 +56,55 @@ export const intro = {
   },
 };
 
-// Shown next to the resume ticket. Keep it in step with the PDF in /resume.
-export const resumeHighlights = [
-  { label: "Experience", text: "LLM systems, backend services and search at a major HR-tech company in Tokyo, 2024 – present." },
-  { label: "Internship", text: "A metaverse contact center on Unity and AWS, 2023." },
-  { label: "Education", text: "B.Tech, Mechanical Engineering, IIT Patna, 2020 – 24." },
-  { label: "Also", text: "Scrum Master, Hacker Cup 2022 Round 3, English and Japanese (JLPT N3)." },
-];
-
-export const board = {
-  now: ["LLM systems in production", "Backend services & APIs", "Search and ranking pipelines"],
-  next: "SDE / AI roles, global teams",
-  notice: [
-    "平常運転 Good service on all lines",
-    "Based in Tokyo (JST, UTC+9)",
-    "Open to SDE and AI engineering roles with global teams",
-    "English: fluent",
-    "日本語: JLPT N3",
-    "Facebook Hacker Cup 2022: Round 3",
-    "1,000+ problems solved on Codeforces & LeetCode",
+const siteEn = {
+  hero: {
+    role: ["Software Engineer", "LLM systems & backend", "Tokyo"],
+    previous: { name: "IIT Patna", detail: "B.Tech, Mechanical Engineering · 2020–24" },
+    next: { name: "Your team", detail: "SDE · AI engineering · global" },
+    statement:
+      "I put LLMs into production systems, along with the queues, checks and monitoring that keep them honest.",
+    lede: "Software engineer at a large HR-tech company in Tokyo. I work mostly in Ruby on Rails, with Go, Python and JavaScript where they fit, on systems that review, rank and search job data. Trained as a mechanical engineer at IIT Patna, then changed lines to software.",
+  },
+  board: {
+    now: ["LLM systems in production", "Backend services & APIs", "Search and ranking pipelines"],
+    next: "SDE / AI roles, global teams",
+    notice: [
+      "平常運転 Good service on all lines",
+      "Based in Tokyo (JST, UTC+9)",
+      "Open to SDE and AI engineering roles with global teams",
+      "English: fluent",
+      "日本語: JLPT N3",
+      "Facebook Hacker Cup 2022: Round 3",
+      "1,000+ problems solved on Codeforces & LeetCode",
+    ],
+  },
+  contact: {
+    lead: "Looking for software and AI engineering roles with global teams.",
+    text: "I'm based in Tokyo (JST, UTC+9). Email is the fastest way to reach me, and I usually reply within a day.",
+    // Where each exit leads, by exit code.
+    dest: {
+      A1: person.email,
+      A2: "linkedin.com/in/deepanzhu-chaudhary",
+      A3: "github.com/DeepanshuChaudhary01",
+      A4: "codeforces.com/profile/deep_dc",
+      B1: "View or download the PDF",
+    } as Record<string, string>,
+  },
+  intro: {
+    tagline: "Software engineer in Tokyo · LLM systems & backend",
+    inspired: "Inspired by Tokyo's Yamanote Line. The journey continues.",
+  },
+  // Shown next to the resume ticket. Keep it in step with the PDF in /resume.
+  resumeHighlights: [
+    { label: "Experience", text: "LLM systems, backend services and search at a major HR-tech company in Tokyo, 2024 – present." },
+    { label: "Internship", text: "A metaverse contact center on Unity and AWS, 2023." },
+    { label: "Education", text: "B.Tech, Mechanical Engineering, IIT Patna, 2020 – 24." },
+    { label: "Also", text: "Scrum Master, Hacker Cup 2022 Round 3, English and Japanese (JLPT N3)." },
   ],
 };
+
+export type SiteCopy = typeof siteEn;
+
+export function getCopy(lang: Lang): SiteCopy {
+  return lang === "ja" ? siteJa : siteEn;
+}

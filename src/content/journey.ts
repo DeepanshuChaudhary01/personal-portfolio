@@ -1,6 +1,8 @@
 // DC04 · Journey: the career as one line. It starts on the mechanical line and changes to the
 // software (DC) line at a transfer. Same NDA rule as everywhere: no employer names, no internal figures.
 
+import type { Lang } from "@/i18n/config";
+import { journeyJa } from "./ja/journey";
 import { person } from "./site";
 
 export type JourneyStop = {
@@ -112,3 +114,29 @@ export const journey: JourneyStop[] = [
     line: "future",
   },
 ];
+
+// The text ja/journey.ts translates. Links keep their English hrefs; only the labels change.
+export type JourneyText = {
+  jaEn?: string;
+  title: string;
+  meta: string;
+  body?: string;
+  points?: string[];
+  links?: { label: string }[];
+};
+
+export function getJourney(lang: Lang): JourneyStop[] {
+  if (lang === "en") return journey;
+  return journey.map((stop) => {
+    const text = journeyJa[stop.id];
+    if (!text || (stop.links?.length ?? 0) !== (text.links?.length ?? 0)) {
+      throw new Error(`Missing or incomplete Japanese text for journey stop "${stop.id}"`);
+    }
+    const { links, ...rest } = text;
+    return {
+      ...stop,
+      ...rest,
+      links: stop.links?.map((link, i) => ({ ...link, label: links![i].label })),
+    };
+  });
+}

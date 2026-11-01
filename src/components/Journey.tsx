@@ -1,29 +1,33 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { journey, type JourneyStop } from "@/content/journey";
+import { localize, type Lang } from "@/i18n/config";
+import { ui } from "@/i18n/ui";
+import { getJourney, type JourneyStop } from "@/content/journey";
+import { EmailMenu } from "./EmailMenu";
 import { SectionSign } from "./SectionSign";
 import styles from "./Journey.module.css";
 
 // "Jul 2020" → a big year with the month under it, like a timetable. "2022" or "Next" stay whole.
-function When({ when }: { when: string }) {
+function When({ when, lang }: { when: string; lang: Lang }) {
+  const t = ui[lang].journey;
   const match = when.match(/^(\w{3}) (\d{4})$/);
   return (
     <span className={styles.when}>
       {match ? (
         <>
           <span className={styles.year}>{match[2]}</span>
-          <span className={styles.month}>{match[1]}</span>
+          <span className={styles.month}>{t.months[ui.en.journey.months.indexOf(match[1])]}</span>
         </>
       ) : (
-        <span className={styles.year}>{when}</span>
+        <span className={styles.year}>{when === "Next" ? t.next : when}</span>
       )}
     </span>
   );
 }
 
-function StopLinks({ links }: { links: NonNullable<JourneyStop["links"]> }) {
+function StopLinks({ links, lang }: { links: NonNullable<JourneyStop["links"]>; lang: Lang }) {
   return (
     <ul className={styles.links}>
       {links.map((link) => {
@@ -35,8 +39,12 @@ function StopLinks({ links }: { links: NonNullable<JourneyStop["links"]> }) {
         );
         return (
           <li key={link.href}>
-            {link.href.startsWith("/") ? (
-              <Link href={link.href}>{inner}</Link>
+            {link.href.startsWith("mailto:") ? (
+              <EmailMenu email={link.href.slice("mailto:".length)} lang={lang} className={styles.linkButton}>
+                {inner}
+              </EmailMenu>
+            ) : link.href.startsWith("/") ? (
+              <Link href={localize(lang, link.href)}>{inner}</Link>
             ) : (
               <a href={link.href} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>
                 {inner}
@@ -62,7 +70,8 @@ function Train() {
   );
 }
 
-export function Journey() {
+export function Journey({ lang }: { lang: Lang }) {
+  const journey = useMemo(() => getJourney(lang), [lang]);
   const trackRef = useRef<HTMLDivElement>(null);
   const [reached, setReached] = useState(0);
   const [ready, setReady] = useState(false);
@@ -109,8 +118,8 @@ export function Journey() {
   return (
     <section id="journey" data-station="04" className="section" aria-labelledby="journey-title">
       <div className="container">
-        <SectionSign num="04" ja="経歴" en="Journey" id="journey-title">
-          From mechanical engineering in Patna to software in Tokyo. Scroll, and the train follows.
+        <SectionSign num="04" ja="経歴" en="Journey" id="journey-title" lang={lang}>
+          {ui[lang].sections.journey}
         </SectionSign>
 
         <div ref={trackRef} className={styles.track} data-ready={ready || undefined}>
@@ -123,7 +132,7 @@ export function Journey() {
                 data-line={i < journey.length - 1 ? stop.line : undefined}
                 data-reached={i < reached || undefined}
               >
-                <When when={stop.when} />
+                <When when={stop.when} lang={lang} />
                 <span className={styles.rail}>
                   <span className={styles.marker} data-marker />
                 </span>
@@ -132,8 +141,8 @@ export function Journey() {
                     <span className={styles.tag}>
                       <span className="jp" lang="ja">
                         {stop.ja}
-                      </span>{" "}
-                      {stop.jaEn}
+                      </span>
+                      {stop.jaEn && ` ${stop.jaEn}`}
                     </span>
                   )}
                   <h3 className={styles.title}>{stop.title}</h3>
@@ -146,7 +155,7 @@ export function Journey() {
                       ))}
                     </ul>
                   )}
-                  {stop.links && <StopLinks links={stop.links} />}
+                  {stop.links && <StopLinks links={stop.links} lang={lang} />}
                 </div>
               </li>
             ))}

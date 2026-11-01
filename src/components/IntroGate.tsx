@@ -1,8 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { intro, person } from "@/content/site";
+import type { Lang } from "@/i18n/config";
+import { ui } from "@/i18n/ui";
+import { getCopy, introBoard, person } from "@/content/site";
 import { useTokyoClock } from "@/lib/useTokyoClock";
+import { LangSwitch } from "./LangSwitch";
 import { Led } from "./Led";
 import { Skyline } from "./Skyline";
 import { Train } from "./Train";
@@ -22,7 +25,9 @@ const TUBES = 8;
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export function IntroGate() {
+export function IntroGate({ lang }: { lang: Lang }) {
+  const t = ui[lang].intro;
+  const copy = getCopy(lang).intro;
   const [phase, setPhase] = useState<Phase>("pending");
   const [doorsOpen, setDoorsOpen] = useState(false);
   const [japaneseName, setJapaneseName] = useState(false);
@@ -160,9 +165,10 @@ export function IntroGate() {
   if (phase === "done") return null;
 
   const stage = phase === "pending" ? "arriving" : phase === "leaving" ? "boarding" : phase;
-  const status = intro.status[stage];
-  const announcement = intro.announcements[stage];
+  const status = introBoard.status[stage];
+  const announcement = introBoard.announcements[stage];
   const destination = japaneseName ? person.nameJa : person.nameEn;
+  const jaFirst = lang === "ja";
 
   return (
     <div
@@ -174,7 +180,7 @@ export function IntroGate() {
       aria-labelledby="intro-title"
     >
       <h2 id="intro-title" className="sr-only">
-        {person.nameEn}: portfolio. Your train is arriving at platform 1.
+        {t.title(jaFirst ? person.nameJa : person.nameEn)}
       </h2>
 
       <div ref={sceneRef} className={styles.scene}>
@@ -201,7 +207,7 @@ export function IntroGate() {
           <div className={styles.board}>
             <div className={styles.boardHead}>
               <span>
-                <span className="jp" lang="ja">発車案内</span> <span className={styles.boardEn}>Departures</span>
+                <span className="jp" lang="ja">発車案内</span> <span className={styles.boardEn}>{t.departures}</span>
               </span>
               <span className={styles.clock} aria-hidden="true">
                 {clock ? `${clock.h}:${clock.m}` : "--:--"}
@@ -218,7 +224,7 @@ export function IntroGate() {
               </div>
               <div className={styles.row}>
                 <Led text="次発" className={styles.service} />
-                <Led text="Your team" className={styles.next} />
+                <Led text={jaFirst ? "貴社" : "Your team"} className={styles.next} />
                 <span className={styles.track}>2</span>
               </div>
               <div className={styles.marquee}>
@@ -235,17 +241,35 @@ export function IntroGate() {
       <div ref={flashRef} className={styles.flash} aria-hidden="true" />
 
       <p className={styles.corner}>
-        DC Line · <span className="jp" lang="ja">1番線</span> Platform 1
+        {jaFirst ? (
+          <span className="jp">DC線・1番線</span>
+        ) : (
+          <>
+            DC Line · <span className="jp" lang="ja">1番線</span> Platform 1
+          </>
+        )}
       </p>
-      <button type="button" className={styles.skip} onClick={leave}>
-        Skip intro <span aria-hidden="true">→</span>
-      </button>
+      <div className={styles.topRight}>
+        <LangSwitch lang={lang} tone="dark" size="sm" />
+        <button type="button" className={styles.skip} onClick={leave}>
+          {t.skip} <span aria-hidden="true">→</span>
+        </button>
+      </div>
 
       <div className={styles.cta}>
-        <p className={styles.tagline}>{intro.tagline}</p>
+        <p className={styles.tagline}>{copy.tagline}</p>
         <button ref={boardButtonRef} type="button" className={styles.boardButton} onClick={board}>
-          <span className="jp" lang="ja">乗車</span> Board the train <span aria-hidden="true">→</span>
+          {jaFirst ? (
+            t.board
+          ) : (
+            <>
+              <span className="jp" lang="ja">乗車</span> {t.board}
+            </>
+          )}{" "}
+          <span aria-hidden="true">→</span>
         </button>
+        {/* Shown once the train has pulled in. */}
+        <p className={styles.inspired}>{copy.inspired}</p>
       </div>
     </div>
   );

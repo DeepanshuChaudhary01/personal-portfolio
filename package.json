@@ -13,6 +13,7 @@
     "check:resume": "node scripts/check-resume.mjs"
   },
   "dependencies": {
+    "fast-xml-parser": "^5.11.2",
     "next": "^16.4.3",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^6.4.299",

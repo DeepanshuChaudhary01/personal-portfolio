@@ -31,7 +31,13 @@ const dot = localFont({
   display: "swap",
 });
 
+// Absolute base for canonical and hreflang links: Vercel's production domain once deployed.
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Deepanshu Chaudhary · Software Engineer, LLM systems",
   description:
     "Software engineer in Tokyo building LLM systems and backend services that run in production.",
@@ -47,9 +53,13 @@ export const viewport: Viewport = {
 // Runs before first paint so the saved theme never flashes.
 const themeScript = `(()=>{try{let t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="light"}})()`;
 
+// Japanese pages live under /ja. The root layout is shared, so <html lang> is corrected here before
+// first paint (each page's content also carries its own lang attribute for the server-rendered HTML).
+const langScript = `document.documentElement.lang=/^\\/ja(\\/|$)/.test(location.pathname)?"ja":"en"`;
+
 // Also before first paint: show the intro (IntroGate) on the home page once per session, but not for
 // deep links (/#resume) or reduced motion. Adding ?intro to the URL always shows it, for previewing.
-const introScript = `(()=>{try{const f=new URLSearchParams(location.search).has("intro");if(location.pathname==="/"&&(f||(!location.hash&&!sessionStorage.getItem("dc-intro-seen")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)))document.documentElement.dataset.intro="show"}catch(e){}})()`;
+const introScript = `(()=>{try{const f=new URLSearchParams(location.search).has("intro");if((location.pathname==="/"||location.pathname==="/ja")&&(f||(!location.hash&&!sessionStorage.getItem("dc-intro-seen")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)))document.documentElement.dataset.intro="show"}catch(e){}})()`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -59,6 +69,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       suppressHydrationWarning
     >
       <head>
+        <script dangerouslySetInnerHTML={{ __html: langScript }} />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
       </head>

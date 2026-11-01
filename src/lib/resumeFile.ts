@@ -4,6 +4,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { PDFDocument } from "pdf-lib";
+import type { Lang } from "@/i18n/config";
 
 const RESUME_DIR = path.join(process.cwd(), "resume");
 
@@ -69,6 +70,8 @@ export async function getResume(): Promise<ResumeFile | null> {
   return files[0] ?? null;
 }
 
-export function formatIssued(date: Date): string {
-  return new Intl.DateTimeFormat("en-GB", { month: "short", year: "numeric", timeZone: "Asia/Tokyo" }).format(date);
+export function formatIssued(date: Date, lang: Lang = "en"): string {
+  const options: Intl.DateTimeFormatOptions =
+    lang === "ja" ? { year: "numeric", month: "long" } : { month: "short", year: "numeric" };
+  return new Intl.DateTimeFormat(lang === "ja" ? "ja-JP" : "en-GB", { ...options, timeZone: "Asia/Tokyo" }).format(date);
 }

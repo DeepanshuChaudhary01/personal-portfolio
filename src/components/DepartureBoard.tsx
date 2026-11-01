@@ -1,13 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { board } from "@/content/site";
+import type { Lang } from "@/i18n/config";
+import { ui } from "@/i18n/ui";
+import { getCopy } from "@/content/site";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { useTokyoClock } from "@/lib/useTokyoClock";
 import { Led } from "./Led";
 import styles from "./DepartureBoard.module.css";
 
-export function DepartureBoard() {
+export function DepartureBoard({ lang }: { lang: Lang }) {
+  const t = ui[lang].board;
+  const board = getCopy(lang).board;
   const reducedMotion = usePrefersReducedMotion();
   const clock = useTokyoClock();
   const [nowIndex, setNowIndex] = useState(0);
@@ -16,15 +20,12 @@ export function DepartureBoard() {
     if (reducedMotion) return;
     const id = window.setInterval(() => setNowIndex((i) => (i + 1) % board.now.length), 6000);
     return () => window.clearInterval(id);
-  }, [reducedMotion]);
+  }, [reducedMotion, board.now.length]);
 
   const hour = clock ? Number(clock.h) : null;
   const asleep = hour !== null && hour < 7;
-  const note = !clock
-    ? "Local time in Tokyo (JST, UTC+9)"
-    : asleep
-      ? `It's ${clock.h}:${clock.m} in Tokyo, so I'm probably asleep. I'll reply in the morning.`
-      : `It's ${clock.h}:${clock.m} in Tokyo. I usually reply within a day.`;
+  const time = clock ? `${clock.h}:${clock.m}` : "";
+  const note = !clock ? t.clockUnknown : asleep ? t.asleep(time) : t.awake(time);
   const notice = board.notice.join("   ·   ");
 
   return (
@@ -32,10 +33,10 @@ export function DepartureBoard() {
       <div className={styles.head}>
         <div className={styles.title}>
           <span className="jp" lang="ja">運行情報</span>
-          <span className={styles.titleEn}>Service status</span>
+          <span className={styles.titleEn}>{t.title}</span>
         </div>
         <div className={styles.clock}>
-          <span className={styles.city}>Tokyo</span>
+          <span className={styles.city}>{t.city}</span>
           <span className={styles.clockLed} aria-hidden="true">
             {clock ? `${clock.h}:${clock.m}` : "--:--"}
             <span className={styles.seconds}>{clock ? `:${clock.s}` : ":--"}</span>
@@ -45,13 +46,16 @@ export function DepartureBoard() {
 
       <div className={styles.cols} aria-hidden="true">
         <span>
-          <span className="jp">種別</span>Service
+          <span className="jp">種別</span>
+          {t.service}
         </span>
         <span>
-          <span className="jp">行先</span>Destination
+          <span className="jp">行先</span>
+          {t.destination}
         </span>
         <span className={styles.trackHead}>
-          <span className="jp">番線</span>Track
+          <span className="jp">番線</span>
+          {t.track}
         </span>
       </div>
 
@@ -59,15 +63,15 @@ export function DepartureBoard() {
         <div className={styles.row}>
           <span className={styles.service}>
             <Led text="先発" tone="green" className={styles.ledText} />
-            <small>Now</small>
+            <small>{t.now}</small>
           </span>
-          <Led key={nowIndex} text={board.now[nowIndex]} className={styles.ledText} />
+          <Led key={`${lang}-${nowIndex}`} text={board.now[nowIndex]} className={styles.ledText} />
           <span className={styles.track}>1</span>
         </div>
         <div className={styles.row}>
           <span className={styles.service}>
             <Led text="次発" className={styles.ledText} />
-            <small>Next</small>
+            <small>{t.next}</small>
           </span>
           <Led text={board.next} className={styles.ledText} />
           <span className={styles.track}>2</span>

@@ -3,6 +3,8 @@
 // NDA rule: no employer names, no internal figures. Facts come from the resume; anything that is
 // reasoning rather than a stated fact is marked `CHECK:` so it can be confirmed before publishing.
 
+import type { Lang } from "@/i18n/config";
+import { workJa } from "./ja/work";
 import type { LineId } from "./network";
 
 export type RouteStop = { name: string; note: string };
@@ -235,7 +237,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         title: "Static and free",
-        body: "Every route, the PDF included, is prerendered at build time and served from Vercel's free tier. There is no server to keep warm, so the first visitor never waits for one to wake up.",
+        body: "Every route, the PDF included, is prerendered and served from Vercel's free tier; the home page quietly rebuilds itself every six hours to refresh the Departures board. There is no server to keep warm, so the first visitor never waits for one to wake up.",
       },
     ],
     outcome: [
@@ -244,7 +246,7 @@ export const caseStudies: CaseStudy[] = [
     nda: false,
     // Counts that hold wherever it's hosted; byte sizes depend on the host's compression.
     numbers: [
-      { value: "7", label: "routes, all prerendered at build time" },
+      { value: "13", label: "routes in two languages, all prerendered" },
       { value: "0", label: "images or videos in the page; everything is drawn in code" },
       { value: "0", label: "animation libraries: SVG, CSS and the Web Animations API" },
       { value: "1", label: "PDF, checked for private details before every build" },
@@ -252,6 +254,21 @@ export const caseStudies: CaseStudy[] = [
   },
 ];
 
-export function getCaseStudy(slug: string): CaseStudy | undefined {
-  return caseStudies.find((c) => c.slug === slug);
+// The text fields that ja/work.ts translates; structure (slugs, codes, lines, stack) is shared.
+export type CaseStudyText = Pick<
+  CaseStudy,
+  "title" | "kind" | "where" | "role" | "summary" | "route" | "problem" | "built" | "decisions" | "outcome" | "numbers"
+>;
+
+export function getCaseStudies(lang: Lang): CaseStudy[] {
+  if (lang === "en") return caseStudies;
+  return caseStudies.map((study) => {
+    const text = workJa[study.slug];
+    if (!text) throw new Error(`Missing Japanese text for case study "${study.slug}"`);
+    return { ...study, ...text };
+  });
+}
+
+export function getCaseStudy(slug: string, lang: Lang = "en"): CaseStudy | undefined {
+  return getCaseStudies(lang).find((c) => c.slug === slug);
 }

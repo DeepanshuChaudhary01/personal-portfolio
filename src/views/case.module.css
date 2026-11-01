@@ -421,3 +421,21 @@
     text-align: left;
   }
 }
+
+.toolbarEnd {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Japanese body copy reads better a little looser. */
+:global(.lang-ja) .main p {
+  line-height: 1.9;
+}
+
+/* Small phones: the next route is also linked at the bottom of the page. */
+@media (max-width: 480px) {
+  .nextLink {
+    display: none;
+  }
+}

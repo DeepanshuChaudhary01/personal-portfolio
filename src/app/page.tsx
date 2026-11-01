@@ -1,65 +1,18 @@
-import { Extension } from "@/components/Extension";
-import { Hero } from "@/components/Hero";
-import { IntroGate } from "@/components/IntroGate";
-import { Journey } from "@/components/Journey";
-import { ResumeTicket } from "@/components/ResumeTicket";
-import { RouteMap } from "@/components/RouteMap";
-import { SectionSign } from "@/components/SectionSign";
-import { SiteHeader } from "@/components/SiteHeader";
-import { WorkSection } from "@/components/WorkSection";
-import { person } from "@/content/site";
+import type { Metadata } from "next";
+import { alternates } from "@/i18n/config";
+import { ui } from "@/i18n/ui";
+import { HomePage } from "@/views/HomePage";
 
-export default function Home() {
-  return (
-    <>
-      <IntroGate />
+// Rebuild the page (and its Departures board) at most every 6 hours.
+// Keep in step with DEPARTURES.refreshSeconds in content/feeds.ts; Next needs a literal here.
+export const revalidate = 21600;
 
-      {/* Made inert while the intro is showing. */}
-      <div id="site">
-        <a href="#main" className="skip">
-          Skip to content
-        </a>
-        <SiteHeader />
-        <main id="main">
-          <Hero />
+export const metadata: Metadata = {
+  title: ui.en.meta.title,
+  description: ui.en.meta.description,
+  alternates: alternates("en", "/"),
+};
 
-          <div className="container">
-            <div className="tactile" role="presentation" />
-          </div>
-
-          <section id="route-map" data-station="02" className="section" aria-labelledby="route-map-title">
-            <div className="container">
-              <SectionSign num="02" ja="路線図" en="Route map" id="route-map-title">
-                Skills are the lines; projects are the interchanges where they meet. Hover or tap anything on the
-                map.
-              </SectionSign>
-              <RouteMap />
-            </div>
-          </section>
-
-          <WorkSection />
-
-          <Journey />
-
-          <ResumeTicket />
-
-          <Extension />
-        </main>
-
-        <footer className="footer">
-          <div className="container">
-            <div className="tactile" role="presentation" />
-            <div className="footer-row">
-              <span>
-                © {new Date().getFullYear()} {person.nameEn}
-              </span>
-              <span>
-                <span className="jp" lang="ja">東京</span> Tokyo · Built with Next.js
-              </span>
-            </div>
-          </div>
-        </footer>
-      </div>
-    </>
-  );
+export default function Page() {
+  return <HomePage lang="en" />;
 }

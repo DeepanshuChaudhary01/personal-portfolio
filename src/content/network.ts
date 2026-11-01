@@ -1,5 +1,9 @@
 // The route map: skills are lines, projects are interchanges where lines meet.
 // Coordinates are in the SVG's 1280-wide viewBox. Lines only run at 0°, 45° and 90°.
+// Japanese station text is in ja/network.ts.
+
+import type { Lang } from "@/i18n/config";
+import { stationsJa } from "./ja/network";
 
 export type LineId = "A" | "B" | "D" | "C";
 
@@ -204,6 +208,19 @@ export const STATIONS: Station[] = [
     caseStudy: "llm-candidate-matching",
   },
 ];
+
+export function lineName(line: Line, lang: Lang): string {
+  return lang === "ja" ? line.ja : line.name;
+}
+
+export function getStations(lang: Lang): Station[] {
+  if (lang === "en") return STATIONS;
+  return STATIONS.map((station) => {
+    const text = stationsJa[station.id];
+    if (!text) throw new Error(`Missing Japanese text for route map station "${station.id}"`);
+    return { ...station, ...text };
+  });
+}
 
 // Turns a 45°/90° polyline into a path with rounded corners, the way metro maps draw bends.
 export function roundedPath(points: [number, number][], radius = 26): string {

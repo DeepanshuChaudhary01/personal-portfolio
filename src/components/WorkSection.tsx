@@ -1,24 +1,26 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
+import { localize, type Lang } from "@/i18n/config";
+import { ui } from "@/i18n/ui";
 import { LINE_BY_ID } from "@/content/network";
-import { caseStudies } from "@/content/work";
+import { getCaseStudies } from "@/content/work";
 import { RouteStrip } from "./RouteStrip";
 import { SectionSign } from "./SectionSign";
 import { StationCodes } from "./StationCodes";
 import styles from "./WorkSection.module.css";
 
 // DC03: each case study is a route card linking to its full write-up.
-export function WorkSection() {
+export function WorkSection({ lang }: { lang: Lang }) {
+  const t = ui[lang];
   return (
     <section id="work" data-station="03" className="section" aria-labelledby="work-title">
       <div className="container">
-        <SectionSign num="03" ja="実績" en="Work" id="work-title">
-          Four routes I&apos;ve built. The first three are under NDA, so names and figures are withheld; the
-          engineering is described as built.
+        <SectionSign num="03" ja="実績" en="Work" id="work-title" lang={lang}>
+          {t.sections.work}
         </SectionSign>
 
         <ol className={styles.grid}>
-          {caseStudies.map((study, i) => {
+          {getCaseStudies(lang).map((study, i) => {
             const colors = study.lines.map((id) => LINE_BY_ID[id].color);
             const first = study.route[0].name;
             const last = study.route[study.route.length - 1].name;
@@ -28,13 +30,13 @@ export function WorkSection() {
             return (
               <li key={study.slug}>
                 <Link
-                  href={`/work/${study.slug}`}
+                  href={localize(lang, `/work/${study.slug}`)}
                   className={styles.card}
                   style={{ "--stripe": `linear-gradient(90deg, ${stripe})` } as CSSProperties}
                 >
                   <div className={styles.top}>
                     <StationCodes codes={study.codes} />
-                    <span className={styles.routeNo}>Route {String(i + 1).padStart(2, "0")}</span>
+                    <span className={styles.routeNo}>{t.work.route(String(i + 1).padStart(2, "0"))}</span>
                   </div>
 
                   <h3 className={styles.title}>
@@ -45,21 +47,19 @@ export function WorkSection() {
 
                   <div className={styles.route}>
                     <RouteStrip stops={study.route} colors={colors} size="mini" />
-                    <p className={styles.caption}>
-                      {first} → {last} · {study.route.length} stops
-                    </p>
+                    <p className={styles.caption}>{t.work.stops(first, last, study.route.length)}</p>
                   </div>
 
                   <div className={styles.foot}>
                     <span className={styles.stack}>{study.stack.slice(0, 4).join(" · ")}</span>
                     <span className={styles.more}>
-                      Read the case study <span aria-hidden="true">→</span>
+                      {t.work.read} <span aria-hidden="true">→</span>
                     </span>
                   </div>
 
                   {!study.nda && (
                     <span className={styles.onboard}>
-                      <span className="jp" lang="ja">乗車中</span> You&apos;re on it
+                      <span className="jp" lang="ja">乗車中</span> {t.work.onboard}
                     </span>
                   )}
                 </Link>

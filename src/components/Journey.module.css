@@ -208,7 +208,8 @@
   list-style: none;
 }
 
-.links a {
+.links a,
+.links .linkButton {
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
@@ -223,7 +224,8 @@
   transition: border-color 0.2s ease;
 }
 
-.links a:hover {
+.links a:hover,
+.links .linkButton:hover {
   border-color: var(--ink-3);
 }
 

@@ -92,3 +92,16 @@
     display: none;
   }
 }
+
+.start {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Small phones: keep Download; the viewer's own fallback links cover opening the PDF. */
+@media (max-width: 520px) {
+  .open {
+    display: none;
+  }
+}

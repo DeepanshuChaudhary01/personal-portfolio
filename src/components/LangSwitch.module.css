@@ -1,0 +1,53 @@
+.switch {
+  --fg: var(--ink);
+  --bg: var(--surface);
+  --line: var(--rule);
+  display: inline-flex;
+  flex: none;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--bg);
+}
+
+.switch[data-tone="dark"] {
+  --fg: #e9eae4;
+  --bg: rgba(255, 255, 255, 0.04);
+  --line: rgba(255, 255, 255, 0.18);
+}
+
+.switch a {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 28px;
+  padding: 0 9px;
+  border-radius: 3px;
+  color: var(--fg);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.switch a:hover {
+  opacity: 1;
+}
+
+.switch a[aria-current] {
+  background: var(--fg);
+  color: var(--bg);
+  opacity: 1;
+}
+
+.switch[data-tone="dark"] a[aria-current] {
+  color: #0b0d10;
+}
+
+.switch[data-size="sm"] a {
+  min-width: 30px;
+  height: 24px;
+  padding: 0 7px;
+  font-size: 0.72rem;
+}
