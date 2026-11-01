@@ -20,4 +20,5 @@ This file is public. Employer names, internal figures and your phone number must
   `scripts/check-resume.mjs` reads the PDFs here and stops the build if one contains a listed term or
   a phone number. Run it any time with `npm run check:resume`.
 - **On Vercel**, the `private/` folder doesn't exist, so add the same terms as an environment variable
-  named `RESUME_BLOCKLIST` (comma-separated). Without it, only phone numbers are checked there.
+  named `RESUME_BLOCKLIST`, with the terms separated by `|` (not commas: a term like `30,000` contains one).
+  Without it, only phone numbers are checked there.

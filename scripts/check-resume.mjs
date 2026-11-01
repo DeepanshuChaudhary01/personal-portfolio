@@ -2,7 +2,8 @@
 // that must stay private. Runs before every `npm run build`; run it alone with `npm run check:resume`.
 //
 // Private terms are read from resume/private/blocklist.txt (git-ignored, one per line) and from the
-// RESUME_BLOCKLIST environment variable (comma- or newline-separated), which is how Vercel gets them.
+// RESUME_BLOCKLIST environment variable (terms separated by "|", since terms like "30,000" contain commas),
+// which is how Vercel gets them.
 // They are kept out of the repo on purpose: listing them in a committed file would publish them too.
 // Phone numbers are always checked.
 
@@ -32,7 +33,7 @@ const resumeDir = fileURLToPath(new URL("../resume/", import.meta.url));
 const blocklistFile = path.join(resumeDir, "private", "blocklist.txt");
 
 const terms = [
-  ...(process.env.RESUME_BLOCKLIST ?? "").split(/[,\n]/),
+  ...(process.env.RESUME_BLOCKLIST ?? "").split(/[|\n]/),
   ...(existsSync(blocklistFile) ? readFileSync(blocklistFile, "utf8").split(/\r?\n/) : []),
 ]
   .map((t) => t.trim())
