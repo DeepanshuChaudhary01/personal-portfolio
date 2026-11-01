@@ -4,6 +4,11 @@
 import type { Lang } from "@/i18n/config";
 import { siteJa } from "./ja/site";
 
+// Whether the site says you're job hunting. While false (quiet mode), it reads as a portfolio:
+// "looking for roles" lines are swapped for neutral ones in both languages (see `quiet` below and
+// `journeyQuiet` in journey.ts). Set to true and push when you're actively looking or have resigned.
+export const openToWork = false;
+
 export const person = {
   nameEn: "Deepanshu Chaudhary",
   nameJa: "チャウダリ ディーパンシュ",
@@ -71,7 +76,6 @@ const siteEn = {
     notice: [
       "平常運転 Good service on all lines",
       "Based in Tokyo (JST, UTC+9)",
-      "Open to SDE and AI engineering roles with global teams",
       "English: fluent",
       "日本語: JLPT N3",
       "Facebook Hacker Cup 2022: Round 3",
@@ -90,6 +94,8 @@ const siteEn = {
       B1: "View or download the PDF",
     } as Record<string, string>,
   },
+  // Where the resume ticket and the intro's "next" train are headed. `alt` is the sign's other language.
+  destination: { name: "Your team", alt: "貴社" },
   intro: {
     tagline: "Software engineer in Tokyo · LLM systems & backend",
     inspired: "Inspired by Tokyo's Yamanote Line. The journey continues.",
@@ -101,10 +107,36 @@ const siteEn = {
     { label: "Education", text: "B.Tech, Mechanical Engineering, IIT Patna, 2020 – 24." },
     { label: "Also", text: "Scrum Master, Hacker Cup 2022 Round 3, English and Japanese (JLPT N3)." },
   ],
+  // Added to the board's scrolling notices only while openToWork is true.
+  openNotice: "Open to SDE and AI engineering roles with global teams",
+  // Replaces the job-seeking lines above while openToWork is false.
+  quiet: {
+    heroNext: { name: "Under construction", detail: "Always building" },
+    boardNext: "Learning, building, shipping",
+    contactLead: "Happy to talk about LLM systems, backend engineering and life in Tokyo.",
+    destination: { name: "Anywhere", alt: "どこまでも" },
+  },
 };
 
-export type SiteCopy = typeof siteEn;
+export type SiteContent = typeof siteEn;
+export type SiteCopy = Omit<SiteContent, "openNotice" | "quiet">;
+
+// Picks the open-to-work or quiet version of the job-seeking lines.
+function resolve({ openNotice, quiet, ...copy }: SiteContent): SiteCopy {
+  if (openToWork) {
+    const notice = [...copy.board.notice];
+    notice.splice(2, 0, openNotice);
+    return { ...copy, board: { ...copy.board, notice } };
+  }
+  return {
+    ...copy,
+    hero: { ...copy.hero, next: quiet.heroNext },
+    board: { ...copy.board, next: quiet.boardNext },
+    contact: { ...copy.contact, lead: quiet.contactLead },
+    destination: quiet.destination,
+  };
+}
 
 export function getCopy(lang: Lang): SiteCopy {
-  return lang === "ja" ? siteJa : siteEn;
+  return resolve(lang === "ja" ? siteJa : siteEn);
 }

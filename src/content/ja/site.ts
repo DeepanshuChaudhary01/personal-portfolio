@@ -1,8 +1,8 @@
 // Japanese copy for content/site.ts. Typed against the English, so nothing can be left out.
 
-import type { SiteCopy } from "../site";
+import type { SiteContent } from "../site";
 
-export const siteJa: SiteCopy = {
+export const siteJa: SiteContent = {
   hero: {
     role: ["ソフトウェアエンジニア", "LLMシステム・バックエンド", "東京"],
     previous: { name: "インド工科大学パトナ校", detail: "機械工学 学士・2020–24" },
@@ -16,7 +16,6 @@ export const siteJa: SiteCopy = {
     notice: [
       "平常運転 全線で平常どおり運転しています",
       "拠点：東京（JST, UTC+9）",
-      "グローバルなチームでのSDE・AIエンジニア職を探しています",
       "英語：流暢",
       "日本語：JLPT N3",
       "Facebook Hacker Cup 2022：Round 3 進出",
@@ -34,6 +33,7 @@ export const siteJa: SiteCopy = {
       B1: "PDFを表示・ダウンロード",
     },
   },
+  destination: { name: "貴社", alt: "Your team" },
   intro: {
     tagline: "東京のソフトウェアエンジニア・LLMシステムとバックエンド",
     inspired: "東京・山手線に着想を得たポートフォリオです。旅は、まだ続きます。",
@@ -44,4 +44,11 @@ export const siteJa: SiteCopy = {
     { label: "学歴", text: "インド工科大学パトナ校 機械工学 学士（2020〜24年）。" },
     { label: "その他", text: "スクラムマスター、Hacker Cup 2022 Round 3、英語・日本語（JLPT N3）。" },
   ],
+  openNotice: "グローバルなチームでのSDE・AIエンジニア職を探しています",
+  quiet: {
+    heroNext: { name: "工事中", detail: "つねに開発中" },
+    boardNext: "学び、作り、届ける",
+    contactLead: "LLMシステムやバックエンド開発、東京での暮らしについて、お気軽にご連絡ください。",
+    destination: { name: "どこまでも", alt: "Anywhere" },
+  },
 };

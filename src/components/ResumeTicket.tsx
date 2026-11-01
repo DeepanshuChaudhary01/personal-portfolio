@@ -10,7 +10,7 @@ import styles from "./ResumeTicket.module.css";
 // DC06: the resume, issued as a train ticket (乗車券). Details come from the PDF in /resume.
 export async function ResumeTicket({ lang }: { lang: Lang }) {
   const t = ui[lang].ticket;
-  const highlights = getCopy(lang).resumeHighlights;
+  const { resumeHighlights: highlights, destination } = getCopy(lang);
   const resume = await getResume();
   const sep = lang === "ja" ? "・" : " · ";
   const format = resume ? ["PDF", t.pages(resume.pages), resume.paper].join(sep) : t.reprinting;
@@ -47,9 +47,9 @@ export async function ResumeTicket({ lang }: { lang: Lang }) {
                   </span>
                   <div>
                     <span className={styles.small}>{t.to}</span>
-                    <strong>{t.toPlace}</strong>
+                    <strong>{destination.name}</strong>
                     <span className={`${styles.place} jp`} lang={lang === "ja" ? "en" : "ja"}>
-                      {lang === "ja" ? "Your team" : "貴社"}
+                      {destination.alt}
                     </span>
                   </div>
                 </div>

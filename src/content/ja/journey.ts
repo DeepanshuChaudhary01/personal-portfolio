@@ -1,7 +1,7 @@
 // Japanese text for the journey stops in ../journey.ts, by stop id. `jaEn` is the second line of a stop's
 // sign tag (the first, `ja`, is shared); "" leaves just the Japanese word.
 
-import type { JourneyText } from "../journey";
+import type { JourneyQuietText, JourneyText } from "../journey";
 
 export const journeyJa: Record<string, JourneyText> = {
   iit: {
@@ -51,4 +51,11 @@ export const journeyJa: Record<string, JourneyText> = {
     body: "この路線は、まだ続きます。グローバルなチームでの、ソフトウェア／AIエンジニア職を探しています。",
     links: [{ label: "メールを送る" }, { label: "レジュメ" }],
   },
+};
+
+// The last stop while openToWork is false (see ../site.ts).
+export const journeyQuietJa: JourneyQuietText = {
+  title: "工事中",
+  meta: "路線は続きます",
+  body: "この路線は、まだ建設中です。本番で動くLLMシステムをはじめ、作りたいものはまだたくさんあります。",
 };

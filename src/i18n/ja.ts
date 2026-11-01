@@ -85,7 +85,6 @@ export const ja: UI = {
     from: "発",
     to: "着",
     fromPlace: "東京",
-    toPlace: "貴社",
     passenger: "乗客",
     class: "種別",
     classValue: "SDE・AIエンジニア",

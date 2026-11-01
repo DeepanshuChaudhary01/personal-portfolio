@@ -82,7 +82,6 @@ export const en = {
     from: "From",
     to: "To",
     fromPlace: "Tokyo",
-    toPlace: "Your team",
     passenger: "Passenger",
     class: "Class",
     classValue: "SDE · AI engineering",

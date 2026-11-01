@@ -2,8 +2,8 @@
 // software (DC) line at a transfer. Same NDA rule as everywhere: no employer names, no internal figures.
 
 import type { Lang } from "@/i18n/config";
-import { journeyJa } from "./ja/journey";
-import { person } from "./site";
+import { journeyJa, journeyQuietJa } from "./ja/journey";
+import { openToWork, person } from "./site";
 
 export type JourneyStop = {
   id: string;
@@ -125,7 +125,17 @@ export type JourneyText = {
   links?: { label: string }[];
 };
 
-export function getJourney(lang: Lang): JourneyStop[] {
+// The last stop's text while openToWork is false: no "looking for roles", the line is simply still
+// being built. Its links (email, resume) stay.
+export type JourneyQuietText = Pick<JourneyText, "title" | "meta" | "body">;
+
+const journeyQuiet: JourneyQuietText = {
+  title: "Under construction",
+  meta: "The line keeps going",
+  body: "This line is still being built, and there's plenty left to make, starting with more LLM systems that hold up in production.",
+};
+
+function translate(lang: Lang): JourneyStop[] {
   if (lang === "en") return journey;
   return journey.map((stop) => {
     const text = journeyJa[stop.id];
@@ -139,4 +149,11 @@ export function getJourney(lang: Lang): JourneyStop[] {
       links: stop.links?.map((link, i) => ({ ...link, label: links![i].label })),
     };
   });
+}
+
+export function getJourney(lang: Lang): JourneyStop[] {
+  const stops = translate(lang);
+  if (openToWork) return stops;
+  const quiet = lang === "ja" ? journeyQuietJa : journeyQuiet;
+  return stops.map((stop) => (stop.id === "next" ? { ...stop, ...quiet } : stop));
 }

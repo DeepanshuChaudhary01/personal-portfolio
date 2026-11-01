@@ -224,7 +224,7 @@ export function IntroGate({ lang }: { lang: Lang }) {
               </div>
               <div className={styles.row}>
                 <Led text="次発" className={styles.service} />
-                <Led text={jaFirst ? "貴社" : "Your team"} className={styles.next} />
+                <Led text={getCopy(lang).destination.name} className={styles.next} />
                 <span className={styles.track}>2</span>
               </div>
               <div className={styles.marquee}>
