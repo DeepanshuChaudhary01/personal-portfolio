@@ -1,0 +1,272 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 64px);
+}
+
+/* A printed ticket: stays on its own paper colour in both themes. */
+.ticket {
+  --t-ink: #1d2a26;
+  --t-ink-2: #51605a;
+  --t-accent: #0a8f74;
+  --stub: 196px;
+  --notch: 12px;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--stub);
+  border-radius: 10px;
+  color: var(--t-ink);
+  background-color: #eef3ea;
+  /* Fine security pattern, like the tint on Japanese rail tickets. */
+  background-image:
+    repeating-linear-gradient(45deg, rgba(10, 143, 116, 0.07) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(-45deg, rgba(10, 143, 116, 0.07) 0 1px, transparent 1px 7px);
+  /* Punched notches where the stub tears off. */
+  mask:
+    radial-gradient(circle var(--notch) at calc(100% - var(--stub)) 0, transparent 98%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle var(--notch) at calc(100% - var(--stub)) 100%, transparent 98%, #000) bottom / 100% 51%
+      no-repeat;
+}
+
+/* The shadow lives on a wrapper: the notch mask would otherwise clip it. */
+.ticketWrap {
+  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.16));
+  transition: transform 0.3s ease;
+}
+
+.ticketWrap:hover {
+  transform: translateY(-3px);
+}
+
+.main {
+  padding: 20px 24px 22px;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(29, 42, 38, 0.18);
+}
+
+.kind {
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  color: var(--t-accent);
+}
+
+.line,
+.serial,
+.small,
+.details dt {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--t-ink-2);
+}
+
+.serial {
+  margin-left: auto;
+}
+
+.route {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 3vw, 28px);
+  padding: 18px 0 16px;
+}
+
+.route > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.route strong {
+  font-size: clamp(1.35rem, 1rem + 1.4vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.place {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--t-ink-2);
+}
+
+.arrow {
+  font-size: 1.6rem;
+  color: var(--t-accent);
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 20px;
+  margin: 0;
+}
+
+.details dd {
+  margin: 2px 0 0;
+  /* Printed fields use the Japanese gothic, like real tickets (and a plain zero). */
+  font-family: var(--font-jp), sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.stub {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 20px;
+  background-image: repeating-linear-gradient(180deg, rgba(29, 42, 38, 0.3) 0 6px, transparent 6px 12px);
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6em;
+  height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid var(--t-ink);
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.primary {
+  background: var(--t-ink);
+  color: #eef3ea;
+}
+
+.primary span {
+  transition: transform 0.25s ease;
+}
+
+.primary:hover span {
+  transform: translateX(3px);
+}
+
+.secondary {
+  color: var(--t-ink);
+}
+
+.secondary:hover {
+  background: var(--t-ink);
+  color: #eef3ea;
+}
+
+.fine {
+  margin-top: 4px;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  color: var(--t-ink-2);
+  text-align: center;
+}
+
+/* ---- What's inside ---- */
+
+.insideTitle {
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.inside ul {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inside ul::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 5px;
+  width: 3px;
+  background: var(--accent);
+}
+
+.inside li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 14px 28px;
+}
+
+.inside li::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 13px;
+  height: 13px;
+  border: 3px solid var(--accent);
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.inside strong {
+  font-size: 0.95rem;
+}
+
+.inside li span {
+  color: var(--ink-2);
+}
+
+.note {
+  margin: 6px 0 0;
+  font-size: 0.82rem;
+  color: var(--ink-3);
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .ticket {
+    grid-template-columns: minmax(0, 1fr);
+    mask: none;
+  }
+
+  .stub {
+    padding-top: 0;
+    background: none;
+  }
+
+  .main {
+    padding: 18px 18px 20px;
+  }
+
+  .details {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticketWrap,
+  .ticketWrap:hover {
+    transition: none;
+    transform: none;
+  }
+}

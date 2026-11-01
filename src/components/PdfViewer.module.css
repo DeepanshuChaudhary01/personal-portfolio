@@ -1,0 +1,100 @@
+.frame {
+  display: grid;
+  gap: 24px;
+  width: 100%;
+  max-width: 210mm;
+  margin: 0 auto;
+}
+
+.sheet {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid var(--rule);
+  background: #fff;
+  box-shadow: 0 30px 60px -40px rgba(0, 0, 0, 0.45);
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.sheet[data-ready] .canvas {
+  opacity: 1;
+}
+
+.link {
+  position: absolute;
+  border-radius: 2px;
+  transition: background-color 0.15s ease;
+}
+
+.link:hover,
+.link:focus-visible {
+  background: rgba(229, 72, 46, 0.12);
+}
+
+/* Shown while pdf.js draws: a small LED board, the way a platform announces an arrival. */
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  display: flex;
+  align-items: baseline;
+  gap: 0.8em;
+  padding: 10px 16px;
+  border-radius: 6px;
+  background: var(--board-bg);
+  color: var(--led-amber);
+  font-family: var(--font-dot);
+  font-size: 0.95rem;
+  white-space: nowrap;
+  text-shadow: 0 0 7px rgba(255, 165, 31, 0.5);
+  transform: translate(-50%, -50%);
+  animation: blink 1.4s steps(2, end) infinite;
+}
+
+.loading .jp {
+  font-family: var(--font-dot);
+  color: var(--led-green);
+  text-shadow: 0 0 7px rgba(91, 227, 138, 0.45);
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.fallback {
+  max-width: 210mm;
+  margin: 48px auto 0;
+  padding: 28px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.fallback p {
+  margin: 0;
+}
+
+.fallback .fallbackTitle {
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading {
+    animation: none;
+  }
+
+  .canvas {
+    transition: none;
+  }
+}

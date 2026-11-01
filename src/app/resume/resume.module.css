@@ -1,0 +1,94 @@
+.desk {
+  min-height: 100vh;
+  padding: 0 var(--gutter) 64px;
+  background: var(--paper);
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 210mm;
+  margin: 0 auto 8px;
+  padding: 14px 0;
+  background: var(--paper);
+}
+
+.back {
+  display: inline-flex;
+  gap: 0.4em;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.toolbarTitle {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.open,
+.download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  height: 40px;
+  padding: 0 14px;
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.open {
+  color: var(--ink);
+}
+
+.download {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.empty {
+  max-width: 210mm;
+  margin: 48px auto 0;
+  padding: 32px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.empty p {
+  margin: 0;
+}
+
+.empty .emptyJa {
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+
+.empty .emptyTitle {
+  margin: 4px 0 8px;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .toolbarTitle {
+    display: none;
+  }
+}

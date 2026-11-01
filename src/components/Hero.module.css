@@ -1,0 +1,287 @@
+.hero {
+  padding-top: clamp(20px, 4vw, 48px);
+  padding-bottom: clamp(48px, 7vw, 88px);
+}
+
+/* ---- Station name sign ---- */
+
+.sign {
+  --pad: clamp(18px, 4vw, 52px);
+  position: relative;
+  overflow: hidden;
+  padding: clamp(44px, 5vw, 60px) var(--pad) 0;
+  border: 1px solid var(--sign-edge);
+  border-radius: 6px;
+  background: var(--sign-bg);
+  color: var(--sign-ink);
+  box-shadow: var(--sign-shadow);
+}
+
+.here {
+  position: absolute;
+  top: clamp(14px, 2vw, 20px);
+  right: var(--pad);
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sign-ink-2);
+}
+
+.here::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: here-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes here-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 0%, transparent);
+  }
+}
+
+.signTop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 3vw, 32px);
+}
+
+.names {
+  min-width: 0;
+}
+
+.ja {
+  margin: 0 0 0.4em;
+  font-size: clamp(0.92rem, 0.7rem + 0.9vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--sign-ink-2);
+}
+
+.en {
+  margin: 0;
+  font-size: clamp(2.3rem, 0.8rem + 5.4vw, 5.6rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.role {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0.9em 0 0;
+  font-family: var(--font-mono);
+  font-size: clamp(0.7rem, 0.64rem + 0.25vw, 0.84rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sign-ink-2);
+}
+
+.sep {
+  padding-inline: 0.7em;
+  color: var(--accent);
+}
+
+/* The line-colour band, with arrows pointing to the neighbouring stations. */
+.band {
+  position: relative;
+  height: clamp(12px, 1.3vw, 16px);
+  margin: clamp(26px, 3.4vw, 44px) calc(var(--pad) * -1) 0;
+  background: var(--accent);
+}
+
+.band::before,
+.band::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 8px;
+  background: var(--sign-bg);
+  transform: translateY(-50%);
+}
+
+.band::before {
+  left: var(--pad);
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+}
+
+.band::after {
+  right: var(--pad);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.marker {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(22px, 2.4vw, 30px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: clamp(4px, 0.5vw, 5px) solid var(--sign-ink);
+  background: var(--sign-bg);
+  transform: translate(-50%, -50%);
+}
+
+.adjacent {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0 clamp(18px, 2.4vw, 26px);
+}
+
+.prev,
+.next {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.next {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.dir {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sign-ink-2);
+}
+
+.prev strong,
+.next strong {
+  font-size: clamp(1.02rem, 0.9rem + 0.5vw, 1.4rem);
+  line-height: 1.2;
+}
+
+.sub {
+  font-size: 0.8rem;
+  color: var(--sign-ink-2);
+}
+
+/* ---- Intro and board ---- */
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+  margin-top: clamp(36px, 5vw, 64px);
+}
+
+.statement {
+  max-width: 24ch;
+  margin: 0;
+  font-size: clamp(1.45rem, 1rem + 1.5vw, 2.15rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: 54ch;
+  margin: 1.1em 0 0;
+  font-size: 1.02rem;
+  color: var(--ink-2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  height: 48px;
+  padding: 0 20px;
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.primary span {
+  transition: transform 0.25s ease;
+}
+
+.primary:hover span {
+  transform: translateX(4px);
+}
+
+.secondary {
+  color: var(--ink);
+}
+
+.secondary:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+@media (max-width: 900px) {
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .signTop {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .adjacent {
+    flex-direction: column;
+  }
+
+  .next {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .marker {
+    left: calc(var(--pad) + 29px);
+  }
+
+  .role {
+    flex-direction: column;
+    gap: 0.2em;
+  }
+
+  .sep {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .here::before {
+    animation: none;
+  }
+}

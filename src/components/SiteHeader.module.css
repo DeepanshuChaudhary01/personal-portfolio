@@ -1,0 +1,290 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 68px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex: none;
+}
+
+.brandBadge {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 4px solid var(--accent);
+  background: var(--sign-bg);
+  color: var(--sign-ink);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.brandText strong {
+  font-size: 0.95rem;
+}
+
+.brandText > span {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+}
+
+.nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.strip {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.strip li {
+  position: relative;
+}
+
+/* The line runs through every station dot; unopened stretches are drawn dashed. */
+.strip li::before {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent);
+}
+
+.strip li:first-child::before {
+  left: 50%;
+}
+
+.strip li:last-child::before {
+  right: 50%;
+}
+
+.strip li[data-open="false"]::before {
+  height: 3px;
+  top: 13.5px;
+  background: repeating-linear-gradient(90deg, var(--ink-3) 0 6px, transparent 6px 11px);
+  opacity: 0.7;
+}
+
+.strip a {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  min-width: 82px;
+  padding: 4px 8px 6px;
+  text-decoration: none;
+  color: var(--ink-2);
+}
+
+.dot {
+  position: relative;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  margin: 2px 0 3px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  background: var(--paper);
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+li[data-open="false"] .dot {
+  border-color: var(--ink-3);
+}
+
+li[data-current] .dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.code {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+}
+
+.en {
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.strip .ja {
+  display: none;
+}
+
+li[data-current] .en {
+  color: var(--ink);
+}
+
+.strip a:hover .en {
+  color: var(--ink);
+}
+
+li[data-open="false"] .en {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex: none;
+}
+
+.theme,
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.theme:hover,
+.menuButton:hover {
+  border-color: var(--ink-3);
+}
+
+.theme :global(.jp) {
+  margin-right: 0.35em;
+  color: var(--accent);
+}
+
+.toLight {
+  display: none;
+}
+
+:global([data-theme="dark"]) .toDark {
+  display: none;
+}
+
+:global([data-theme="dark"]) .toLight {
+  display: inline;
+}
+
+.menuButton {
+  display: none;
+}
+
+.menu {
+  border-top: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.menuList {
+  margin: 0;
+  padding-block: 8px 16px;
+  list-style: none;
+}
+
+.menuList li {
+  position: relative;
+}
+
+.menuList li::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--accent);
+}
+
+.menuList li:first-child::before {
+  top: 50%;
+}
+
+.menuList li:last-child::before {
+  bottom: 50%;
+}
+
+.menuList li[data-open="false"]::before {
+  background: repeating-linear-gradient(180deg, var(--ink-3) 0 6px, transparent 6px 11px);
+}
+
+.menuList a {
+  display: grid;
+  grid-template-columns: 16px 52px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  text-decoration: none;
+}
+
+.menuList .dot {
+  margin: 0;
+}
+
+.menuList .en {
+  font-size: 0.95rem;
+}
+
+.menuList .ja {
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+
+@media (max-width: 1100px) {
+  .nav {
+    display: none;
+  }
+
+  .menuButton {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .brandText {
+    display: none;
+  }
+
+  .theme {
+    padding: 0 10px;
+  }
+}

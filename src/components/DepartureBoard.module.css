@@ -1,0 +1,259 @@
+.board {
+  --cols: 4.6rem minmax(0, 1fr) 3.4rem;
+  margin: 0;
+  padding: 16px 18px 14px;
+  border-radius: 8px;
+  background: var(--board-bg);
+  color: #d9dbd6;
+  box-shadow: inset 0 0 0 1px var(--board-edge), 0 30px 60px -36px rgba(0, 0, 0, 0.6);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #23272c;
+}
+
+.title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7em;
+}
+
+.title :global(.jp) {
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #f2f2ee;
+}
+
+.titleEn,
+.city {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8a9097;
+}
+
+.clock {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+}
+
+.clockLed {
+  font-family: var(--font-dot);
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--led-amber);
+  text-shadow: 0 0 8px rgba(255, 165, 31, 0.45);
+  font-variant-numeric: tabular-nums;
+}
+
+.seconds {
+  font-size: 0.7em;
+  opacity: 0.7;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: var(--cols);
+  gap: 12px;
+  padding: 10px 12px 6px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6f767e;
+}
+
+.cols :global(.jp) {
+  margin-right: 0.4em;
+  letter-spacing: 0.08em;
+  color: #a0a6ad;
+}
+
+.trackHead {
+  justify-self: end;
+}
+
+/* The LED panel. A dot mask over it turns smooth glyphs into a dot-matrix look. */
+.screen {
+  position: relative;
+  overflow: hidden;
+  padding: 2px 12px;
+  border-radius: 4px;
+  background: #07080a;
+  box-shadow: inset 0 0 0 1px #1a1d21, inset 0 10px 24px rgba(0, 0, 0, 0.6);
+}
+
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, transparent 0 0.75px, rgba(7, 8, 10, 0.6) 1.15px);
+  background-size: 3px 3px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: var(--cols);
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #16191c;
+}
+
+.led {
+  font-family: var(--font-dot);
+  font-size: clamp(1rem, 0.86rem + 0.5vw, 1.28rem);
+  line-height: 1.3;
+  letter-spacing: 0.03em;
+  color: var(--led-amber);
+  text-shadow: 0 0 7px rgba(255, 165, 31, 0.5);
+}
+
+.led[data-tone="green"] {
+  color: var(--led-green);
+  text-shadow: 0 0 7px rgba(91, 227, 138, 0.45);
+}
+
+.led > span[aria-hidden] > span {
+  animation: led-on 480ms steps(3, end) both;
+  animation-delay: calc(var(--i) * 24ms);
+}
+
+@keyframes led-on {
+  0% {
+    opacity: 0;
+  }
+  45% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.service small {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6d737a;
+}
+
+.track {
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  width: 1.9em;
+  height: 1.9em;
+  border: 1.5px solid #3a3f45;
+  border-radius: 4px;
+  font-family: var(--font-dot);
+  font-size: 1.05rem;
+  color: #f2f2ee;
+}
+
+.marquee {
+  overflow: hidden;
+  padding: 10px 0 9px;
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+
+.marqueeTrack {
+  display: flex;
+  width: max-content;
+  animation: marquee 60s linear infinite;
+}
+
+.marqueeTrack > span {
+  padding-right: 3em;
+  white-space: nowrap;
+  font-family: var(--font-dot);
+  font-size: 0.95rem;
+  color: var(--led-green);
+  text-shadow: 0 0 6px rgba(91, 227, 138, 0.4);
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.note {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: #9aa0a7;
+}
+
+.note::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--led-green);
+  box-shadow: 0 0 8px var(--led-green);
+}
+
+.note[data-asleep]::before {
+  background: var(--led-amber);
+  box-shadow: 0 0 8px var(--led-amber);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .led > span[aria-hidden] > span {
+    animation: none;
+  }
+
+  .marqueeTrack {
+    width: auto;
+    animation: none;
+  }
+
+  .marqueeTrack > span {
+    white-space: normal;
+    line-height: 1.6;
+  }
+
+  .marqueeTrack > span + span {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .board {
+    --cols: 3.6rem minmax(0, 1fr) 2.4rem;
+    padding: 14px 14px 12px;
+  }
+
+  .titleEn,
+  .city {
+    display: none;
+  }
+
+  .title :global(.jp),
+  .clockLed {
+    white-space: nowrap;
+  }
+}

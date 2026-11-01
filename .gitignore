@@ -1,0 +1,10 @@
+node_modules/
+.next/
+out/
+.vercel/
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+
+# Private resume versions and the list of terms that must never be published.
+resume/private/

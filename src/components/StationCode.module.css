@@ -1,0 +1,45 @@
+.code {
+  display: inline-grid;
+  place-content: center;
+  flex: none;
+  width: var(--s);
+  height: var(--s);
+  border: var(--bw) solid var(--c);
+  border-radius: var(--r);
+  background: var(--sign-bg);
+  color: var(--sign-ink);
+  text-align: center;
+  line-height: 1;
+  /* Signage digits: a Japanese gothic, without the slashed zero of the body font. */
+  font-family: var(--font-jp), sans-serif;
+  font-weight: 700;
+}
+
+.line {
+  font-size: calc(var(--s) * 0.24);
+  letter-spacing: 0.04em;
+}
+
+.num {
+  margin-top: calc(var(--s) * 0.03);
+  font-size: calc(var(--s) * 0.4);
+  letter-spacing: -0.02em;
+}
+
+.lg {
+  --s: clamp(58px, 7vw, 86px);
+  --bw: clamp(5px, 0.7vw, 7px);
+  --r: clamp(10px, 1.2vw, 14px);
+}
+
+.md {
+  --s: 50px;
+  --bw: 4.5px;
+  --r: 10px;
+}
+
+.sm {
+  --s: 38px;
+  --bw: 3.5px;
+  --r: 8px;
+}

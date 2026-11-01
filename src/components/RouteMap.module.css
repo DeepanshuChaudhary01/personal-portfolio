@@ -1,0 +1,436 @@
+.frame {
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+/* ---- Toolbar ---- */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 24px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px 0 5px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.chip:hover {
+  border-color: var(--c);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--c);
+  background: var(--c);
+  color: #fff;
+}
+
+.chipBadge {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 3.5px solid var(--c);
+  border-radius: 50%;
+  background: var(--sign-bg);
+  color: var(--sign-ink);
+  font-size: 0.74rem;
+}
+
+.chipJa {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+
+.chip[aria-pressed="true"] .chipJa {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+
+.hintNarrow {
+  display: none;
+}
+
+/* ---- Map ---- */
+
+.scroller {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.map {
+  display: block;
+  width: 100%;
+  min-width: 940px;
+  height: auto;
+  padding: 10px 14px;
+  user-select: none;
+}
+
+.line {
+  fill: none;
+  stroke-width: 10;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: opacity 0.25s ease, stroke-dashoffset 1.9s cubic-bezier(0.65, 0, 0.35, 1) var(--ld, 0s);
+}
+
+.glint {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.78);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 1.8 98.2;
+  animation: glint linear infinite;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+@keyframes glint {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 26;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+.badge {
+  transition: opacity 0.25s ease;
+}
+
+.badge circle {
+  fill: var(--sign-bg);
+  stroke-width: 4;
+}
+
+.badge text {
+  fill: var(--sign-ink);
+  font-size: 14px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.station {
+  cursor: pointer;
+  outline: none;
+  transition: opacity 0.25s ease;
+}
+
+.hitArea {
+  fill: transparent;
+  stroke: none;
+}
+
+.station:focus-visible .hitArea {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.stop,
+.capsule {
+  fill: var(--surface);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.stop {
+  stroke: var(--c);
+  stroke-width: 3.5;
+}
+
+.capsule {
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+.station:hover .stop,
+.station[data-active] .stop {
+  transform: scale(1.35);
+}
+
+.station:hover .capsule,
+.station[data-active] .capsule {
+  transform: scale(1.12);
+}
+
+.label,
+.meta {
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.label {
+  fill: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+  transition: fill 0.2s ease;
+}
+
+.station[data-kind="interchange"] .label {
+  font-size: 15.5px;
+}
+
+.meta {
+  fill: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+}
+
+.station[data-kind="stop"]:hover .label,
+.station[data-kind="stop"][data-active] .label {
+  fill: var(--c);
+}
+
+/* Focusing one line fades everything that doesn't run on it. */
+.map[data-focus="A"] :is(.line, .glint):not([data-line="A"]),
+.map[data-focus="B"] :is(.line, .glint):not([data-line="B"]),
+.map[data-focus="D"] :is(.line, .glint):not([data-line="D"]),
+.map[data-focus="C"] :is(.line, .glint):not([data-line="C"]) {
+  opacity: 0.12;
+}
+
+.map[data-focus="A"] :is(.station, .badge):not([data-lines~="A"]),
+.map[data-focus="B"] :is(.station, .badge):not([data-lines~="B"]),
+.map[data-focus="D"] :is(.station, .badge):not([data-lines~="D"]),
+.map[data-focus="C"] :is(.station, .badge):not([data-lines~="C"]) {
+  opacity: 0.22;
+}
+
+/* Draw-in: lines trace themselves, then stations appear left to right. */
+.map[data-draw="armed"] .line {
+  stroke-dashoffset: 1;
+  transition: none;
+}
+
+.map[data-draw="armed"] :is(.station, .badge, .glints) {
+  opacity: 0;
+}
+
+.map[data-draw="drawn"] :is(.station, .badge) {
+  animation: station-in 0.45s ease backwards;
+  animation-delay: var(--d);
+}
+
+.map[data-draw="drawn"] .glints {
+  animation: fade-in 0.8s ease 2.4s backwards;
+}
+
+@keyframes station-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---- Station info ---- */
+
+.info {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 16px 24px;
+  min-height: 150px;
+  padding: 20px 18px;
+  border-top: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.infoCodes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 206px;
+}
+
+.infoCode {
+  display: inline-grid;
+  place-content: center;
+  width: 46px;
+  height: 46px;
+  border: 4px solid var(--c);
+  border-radius: 9px;
+  background: var(--sign-bg);
+  color: var(--sign-ink);
+  text-align: center;
+  font-family: var(--font-jp), sans-serif;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.infoCode span {
+  font-size: 0.62rem;
+}
+
+.infoBody {
+  min-width: 0;
+}
+
+.infoKind {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.infoName {
+  margin: 0.2em 0 0;
+  font-size: 1.3rem;
+  line-height: 1.25;
+}
+
+.infoMeta {
+  margin-left: 0.7em;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.infoText {
+  max-width: 68ch;
+  margin: 0.45em 0 0;
+  color: var(--ink-2);
+}
+
+.infoSoon {
+  margin: 0.7em 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+.infoLines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.infoLines li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.infoLines li::before {
+  content: "";
+  width: 22px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--c);
+}
+
+.keySymbols {
+  display: block;
+}
+
+.keyLine {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 8;
+}
+
+.keyStop {
+  fill: var(--surface);
+  stroke: var(--ink-3);
+  stroke-width: 3.5;
+}
+
+.keyCapsule {
+  fill: var(--surface);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+@media (max-width: 760px) {
+  .info {
+    grid-template-columns: 1fr;
+  }
+
+  .infoLines {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+
+  .hintWide {
+    display: none;
+  }
+
+  .hintNarrow {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glints {
+    display: none;
+  }
+
+  .line {
+    transition: opacity 0.25s ease;
+  }
+}
